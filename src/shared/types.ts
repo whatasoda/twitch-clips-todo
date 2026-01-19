@@ -9,9 +9,10 @@ export interface CreateRecordPayload {
 }
 
 export interface LinkVodPayload {
-  streamerId: string;
   vodId: string;
-  vodStartedAt: string;
+  streamerId: string;
+  startedAt: string; // ISO 8601
+  durationSeconds: number;
 }
 
 export type MessageToBackground =
@@ -19,8 +20,9 @@ export type MessageToBackground =
   | { type: "UPDATE_MEMO"; payload: { id: string; memo: string } }
   | { type: "MARK_COMPLETED"; payload: { id: string } }
   | { type: "DELETE_RECORD"; payload: { id: string } }
-  | { type: "GET_RECORDS"; payload: { streamerId?: string } }
+  | { type: "GET_RECORDS"; payload?: { streamerId?: string } }
   | { type: "LINK_VOD"; payload: LinkVodPayload }
-  | { type: "GET_PENDING_COUNT"; payload: { streamerId: string } };
+  | { type: "GET_PENDING_COUNT"; payload: { streamerId: string } }
+  | { type: "OPEN_SIDE_PANEL" };
 
 export type MessageResponse<T> = { success: true; data: T } | { success: false; error: string };
