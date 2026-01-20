@@ -10,16 +10,11 @@ export interface ClipUrlParams {
 // or with broadcastId instead of vodID
 export function buildClipCreationUrl(params: ClipUrlParams): string {
   const searchParams = new URLSearchParams({
+    // vodId を優先、なければ broadcastId を使用
+    ...(params.vodId ? { vodID: params.vodId } : params.broadcastId ? { broadcastID: params.broadcastId } : {}),
     broadcasterLogin: params.broadcasterLogin,
     offsetSeconds: String(params.offsetSeconds),
   });
-
-  // vodId を優先、なければ broadcastId を使用
-  if (params.vodId) {
-    searchParams.set("vodID", params.vodId);
-  } else if (params.broadcastId) {
-    searchParams.set("broadcastId", params.broadcastId);
-  }
 
   return `https://clips.twitch.tv/create?${searchParams.toString()}`;
 }
