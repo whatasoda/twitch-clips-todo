@@ -2,6 +2,7 @@ import type { PageInfo } from "../core/twitch";
 import { getCurrentPageInfo, setupNavigationListener } from "./detector";
 import {
   createRecord,
+  deleteRecord,
   getCurrentStream,
   getPendingCount,
   getStreamerInfo,
@@ -105,8 +106,17 @@ async function handleRecord(): Promise<void> {
         pendingRecordId = null;
         refreshIndicator();
       },
-      () => {
-        showToast("Moment recorded!", "success");
+      async () => {
+        // Cancel: Delete the pending record
+        if (pendingRecordId) {
+          try {
+            await deleteRecord(pendingRecordId);
+            showToast("Recording cancelled", "info");
+          } catch (error) {
+            console.error("[Twitch Clip Todo] Failed to delete record:", error);
+            showToast("Failed to cancel recording", "error");
+          }
+        }
         pendingRecordId = null;
         refreshIndicator();
       },

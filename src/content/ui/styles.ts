@@ -32,7 +32,7 @@ export const styles = {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     `,
     input: `
-      width: 200px;
+      width: 320px;
       padding: 8px 12px;
       border: 1px solid #3d3d3d;
       border-radius: 4px;

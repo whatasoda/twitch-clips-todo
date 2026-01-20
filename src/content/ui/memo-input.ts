@@ -2,7 +2,10 @@ import { styles } from "./styles";
 
 let containerElement: HTMLElement | null = null;
 
-export function showMemoInput(onSave: (memo: string) => void, onCancel: () => void): void {
+export function showMemoInput(
+  onSave: (memo: string) => void | Promise<void>,
+  onCancel: () => void | Promise<void>,
+): void {
   if (containerElement) return;
 
   const host = document.createElement("div");
@@ -22,28 +25,49 @@ export function showMemoInput(onSave: (memo: string) => void, onCancel: () => vo
 
   const cancelBtn = document.createElement("button");
   cancelBtn.setAttribute("style", styles.memoInput.cancelButton);
-  cancelBtn.textContent = "Skip";
+  cancelBtn.textContent = "Cancel";
 
   const saveBtn = document.createElement("button");
   saveBtn.setAttribute("style", styles.memoInput.saveButton);
   saveBtn.textContent = "Save";
 
-  const handleSave = () => {
-    onSave(input.value);
+  // IME composition state
+  let isComposing = false;
+
+  const handleSave = async () => {
+    saveBtn.disabled = true;
+    cancelBtn.disabled = true;
+    await onSave(input.value);
     hideMemoInput();
   };
 
-  const handleCancel = () => {
-    onCancel();
+  const handleCancel = async () => {
+    saveBtn.disabled = true;
+    cancelBtn.disabled = true;
+    cancelBtn.textContent = "Cancelling...";
+    await onCancel();
     hideMemoInput();
   };
+
+  // Track IME composition state
+  input.addEventListener("compositionstart", () => {
+    isComposing = true;
+  });
+
+  input.addEventListener("compositionend", () => {
+    isComposing = false;
+  });
 
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      handleSave();
+      // Only save if not in IME composition
+      if (!isComposing && !e.isComposing) {
+        handleSave();
+      }
     } else if (e.key === "Escape") {
       e.preventDefault();
+      // ESC should always cancel, even during composition
       handleCancel();
     }
   });
