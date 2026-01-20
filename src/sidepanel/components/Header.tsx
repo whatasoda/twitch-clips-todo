@@ -1,5 +1,5 @@
-import { Box, Flex } from "../../../styled-system/jsx";
 import { Badge } from "@/components/ui/badge";
+import { Box, Flex } from "../../../styled-system/jsx";
 import type { PageInfo } from "../../core/twitch";
 
 interface HeaderProps {
@@ -18,20 +18,13 @@ export function Header(props: HeaderProps) {
   };
 
   return (
-    <Box
-      p="4"
-      borderBottomWidth="1px"
-      borderColor="border.default"
-      bg="bg.muted"
-    >
+    <Box p="4" borderBottomWidth="1px" borderColor="border.default" bg="bg.muted">
       <Flex alignItems="center" gap="2">
         <Box fontWeight="semibold" fontSize="lg">
           {title()}
         </Box>
         {props.pageInfo.type !== "other" && (
-          <Badge
-            variant={props.pageInfo.type === "live" ? "solid" : "outline"}
-          >
+          <Badge variant={props.pageInfo.type === "live" ? "solid" : "outline"}>
             {props.pageInfo.type === "live" ? "Live" : "VOD"}
           </Badge>
         )}

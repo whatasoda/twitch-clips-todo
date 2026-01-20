@@ -2,10 +2,7 @@ import { styles } from "./styles";
 
 let containerElement: HTMLElement | null = null;
 
-export function showMemoInput(
-  onSave: (memo: string) => void,
-  onCancel: () => void
-): void {
+export function showMemoInput(onSave: (memo: string) => void, onCancel: () => void): void {
   if (containerElement) return;
 
   const host = document.createElement("div");

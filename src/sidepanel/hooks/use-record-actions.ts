@@ -1,6 +1,6 @@
 import type { Record } from "../../core/record";
-import type { MessageResponse } from "../../shared/types";
 import { buildClipCreationUrl } from "../../core/twitch";
+import type { MessageResponse } from "../../shared/types";
 
 export function useRecordActions() {
   async function updateMemo(id: string, memo: string): Promise<Record> {

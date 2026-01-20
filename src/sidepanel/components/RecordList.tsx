@@ -1,15 +1,15 @@
-import { For, Show, createMemo } from "solid-js";
+import { createMemo, For, Show } from "solid-js";
 import { Box } from "../../../styled-system/jsx";
 import type { Record } from "../../core/record";
 import { groupRecordsByStreamer, sortRecordsByDate } from "../../core/record";
-import { StreamerGroup } from "./StreamerGroup";
 import { EmptyState } from "./EmptyState";
+import { StreamerGroup } from "./StreamerGroup";
 
 interface RecordListProps {
   records: Record[];
-  onUpdateMemo: (id: string, memo: string) => Promise<void>;
-  onDelete: (id: string) => Promise<void>;
-  onOpenClip: (record: Record) => Promise<void>;
+  onUpdateMemo: (id: string, memo: string) => Promise<unknown>;
+  onDelete: (id: string) => Promise<unknown>;
+  onOpenClip: (record: Record) => Promise<unknown>;
 }
 
 export function RecordList(props: RecordListProps) {

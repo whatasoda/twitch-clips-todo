@@ -1,18 +1,18 @@
+import { Check, Trash2, Video } from "lucide-solid";
 import { createSignal, Show } from "solid-js";
-import { Box, Flex, HStack } from "../../../styled-system/jsx";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Trash2, Check, Video } from "lucide-solid";
+import { Box, Flex, HStack } from "../../../styled-system/jsx";
 import type { Record } from "../../core/record";
 import { formatTimestamp } from "../../core/twitch";
 
 interface RecordItemProps {
   record: Record;
-  onUpdateMemo: (id: string, memo: string) => Promise<void>;
-  onDelete: (id: string) => Promise<void>;
-  onOpenClip: (record: Record) => Promise<void>;
+  onUpdateMemo: (id: string, memo: string) => Promise<unknown>;
+  onDelete: (id: string) => Promise<unknown>;
+  onOpenClip: (record: Record) => Promise<unknown>;
 }
 
 export function RecordItem(props: RecordItemProps) {
@@ -63,11 +63,7 @@ export function RecordItem(props: RecordItemProps) {
       _hover={{ bg: "bg.muted" }}
     >
       <Flex alignItems="center" justifyContent="space-between" mb="2">
-        <Box
-          fontWeight="bold"
-          color="accent.default"
-          fontFamily="mono"
-        >
+        <Box fontWeight="bold" color="accent.default" fontFamily="mono">
           {formatTimestamp(props.record.timestampSeconds)}
         </Box>
         <HStack gap="1">
@@ -78,7 +74,14 @@ export function RecordItem(props: RecordItemProps) {
               onClick={handleOpenClip}
               disabled={isLoading()}
             >
-              <Show when={isCompleted()} fallback={<><Video size={14} /> Create Clip</>}>
+              <Show
+                when={isCompleted()}
+                fallback={
+                  <>
+                    <Video size={14} /> Create Clip
+                  </>
+                }
+              >
                 <Check size={14} /> Clipped
               </Show>
             </Button>

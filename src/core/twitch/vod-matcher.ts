@@ -28,7 +28,7 @@ export function calculateVodOffset(record: Record, vodStartedAt: Date): number {
 // Link multiple records to a VOD
 export function linkRecordsToVod(
   records: Record[],
-  vod: VodInfo
+  vod: VodInfo,
 ): Array<{ record: Record; vodOffset: number }> {
   return records
     .filter((r) => matchRecordToVod(r, vod))

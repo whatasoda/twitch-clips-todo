@@ -1,18 +1,18 @@
-export * from "./types";
-export { createStorageAPI } from "./storage";
-export { createRuntimeAPI } from "./runtime";
-export { createTabsAPI } from "./tabs";
-export { createCommandsAPI } from "./commands";
-export { createSidePanelAPI } from "./side-panel";
 export { createAlarmsAPI } from "./alarms";
+export { createCommandsAPI } from "./commands";
+export { createRuntimeAPI } from "./runtime";
+export { createSidePanelAPI } from "./side-panel";
+export { createStorageAPI } from "./storage";
+export { createTabsAPI } from "./tabs";
+export * from "./types";
 
-import type { ChromeAPI } from "./types";
-import { createStorageAPI } from "./storage";
-import { createRuntimeAPI } from "./runtime";
-import { createTabsAPI } from "./tabs";
-import { createCommandsAPI } from "./commands";
-import { createSidePanelAPI } from "./side-panel";
 import { createAlarmsAPI } from "./alarms";
+import { createCommandsAPI } from "./commands";
+import { createRuntimeAPI } from "./runtime";
+import { createSidePanelAPI } from "./side-panel";
+import { createStorageAPI } from "./storage";
+import { createTabsAPI } from "./tabs";
+import type { ChromeAPI } from "./types";
 
 export function createChromeAPI(): ChromeAPI {
   return {

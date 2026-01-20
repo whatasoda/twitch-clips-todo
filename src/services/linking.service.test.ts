@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
+import { createMockStorageAPI } from "../infrastructure/test-doubles";
 import { createLinkingService, type LinkingService } from "./linking.service";
 import { createRecordService, type RecordService } from "./record.service";
-import { createMockStorageAPI } from "../infrastructure/test-doubles";
 
 describe("LinkingService", () => {
   let recordService: RecordService;
@@ -28,7 +28,7 @@ describe("LinkingService", () => {
     // Manually update recordedAt to be within VOD timeframe
     await recordService.updateMemo(record1.id, ""); // trigger update
     const store = await recordService.getAll();
-    const r = store.find(r => r.id === record1.id);
+    const r = store.find((r) => r.id === record1.id);
     if (r) {
       r.recordedAt = "2024-01-01T11:00:00Z"; // 1 hour into the stream
     }

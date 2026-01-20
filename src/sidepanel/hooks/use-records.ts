@@ -1,4 +1,4 @@
-import { createResource, onMount, onCleanup } from "solid-js";
+import { createResource, onCleanup, onMount } from "solid-js";
 import type { Record } from "../../core/record";
 import type { MessageResponse } from "../../shared/types";
 
@@ -18,7 +18,7 @@ export function useRecords() {
   // Listen for storage changes to auto-refresh
   onMount(() => {
     const listener = (changes: { [key: string]: chrome.storage.StorageChange }) => {
-      if (changes["records"]) {
+      if (changes.records) {
         refetch();
       }
     };

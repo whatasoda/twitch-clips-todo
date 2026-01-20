@@ -1,4 +1,4 @@
-import type { ChromeStorageAPI, ChromeRuntimeAPI, ChromeAPI } from "../chrome";
+import type { ChromeAPI, ChromeRuntimeAPI, ChromeStorageAPI } from "../chrome";
 
 export function createMockStorageAPI(): ChromeStorageAPI {
   const store = new Map<string, unknown>();
@@ -36,7 +36,7 @@ export function createMockChromeAPI(overrides: Partial<ChromeAPI> = {}): ChromeA
   return {
     storage: createMockStorageAPI(),
     runtime: createMockRuntimeAPI(),
-    tabs: { create: async () => ({} as chrome.tabs.Tab), query: async () => [] },
+    tabs: { create: async () => ({}) as chrome.tabs.Tab, query: async () => [] },
     commands: { onCommand: { addListener: () => {} } },
     sidePanel: { open: async () => {}, setOptions: async () => {} },
     alarms: { create: () => {}, onAlarm: { addListener: () => {} } },

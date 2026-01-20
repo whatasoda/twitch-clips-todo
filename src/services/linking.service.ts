@@ -1,7 +1,7 @@
-import type { RecordService } from "./record.service";
 import type { Record } from "../core/record";
 import type { VodInfo } from "../core/twitch";
 import { linkRecordsToVod } from "../core/twitch";
+import type { RecordService } from "./record.service";
 
 export interface LinkingServiceDeps {
   recordService: RecordService;

@@ -12,7 +12,15 @@ export interface PageInfo {
 const VOD_PATTERN = /^\/videos\/(\d+)/;
 const CHANNEL_SUBPAGE_PATTERN = /^\/([a-zA-Z0-9_]+)\/(videos|clips|about|schedule)/;
 const LIVE_PATTERN = /^\/([a-zA-Z0-9_]+)$/;
-const EXCLUDED_PATHS = ["directory", "downloads", "jobs", "turbo", "settings", "wallet", "subscriptions"];
+const EXCLUDED_PATHS = [
+  "directory",
+  "downloads",
+  "jobs",
+  "turbo",
+  "settings",
+  "wallet",
+  "subscriptions",
+];
 
 export function detectPage(url: string): PageInfo {
   try {

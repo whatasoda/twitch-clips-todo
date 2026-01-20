@@ -1,8 +1,15 @@
-import type { MessageToBackground, MessageResponse, CreateRecordPayload, LinkVodPayload } from "../shared/types";
 import type { Record } from "../core/record";
+import type {
+  CreateRecordPayload,
+  LinkVodPayload,
+  MessageResponse,
+  MessageToBackground,
+} from "../shared/types";
 
 async function sendMessage<T>(message: MessageToBackground): Promise<T> {
-  const response = await chrome.runtime.sendMessage<MessageToBackground, MessageResponse<T>>(message);
+  const response = await chrome.runtime.sendMessage<MessageToBackground, MessageResponse<T>>(
+    message,
+  );
   if (!response.success) {
     throw new Error(response.error);
   }

@@ -1,7 +1,7 @@
 import { createChromeAPI } from "../infrastructure/chrome";
-import { createRecordService, createLinkingService, createCleanupService } from "../services";
-import { handleMessage } from "./message-handler";
+import { createCleanupService, createLinkingService, createRecordService } from "../services";
 import type { MessageToBackground } from "../shared/types";
+import { handleMessage } from "./message-handler";
 
 // Initialize Chrome API
 const chromeAPI = createChromeAPI();
@@ -21,7 +21,8 @@ cleanupService.initialize();
 chrome.runtime.onMessage.addListener((message: MessageToBackground, sender, sendResponse) => {
   // Handle OPEN_SIDE_PANEL separately as it needs sender.tab
   if (message.type === "OPEN_SIDE_PANEL" && sender.tab?.id) {
-    chromeAPI.sidePanel.open({ tabId: sender.tab.id })
+    chromeAPI.sidePanel
+      .open({ tabId: sender.tab.id })
       .then(() => sendResponse({ success: true, data: null }))
       .catch((error) => sendResponse({ success: false, error: String(error) }));
     return true;
@@ -30,7 +31,10 @@ chrome.runtime.onMessage.addListener((message: MessageToBackground, sender, send
   handleMessage(message, { recordService, linkingService })
     .then(sendResponse)
     .catch((error) =>
-      sendResponse({ success: false, error: error instanceof Error ? error.message : "Unknown error" })
+      sendResponse({
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      }),
     );
   return true; // Keep channel open for async response
 });

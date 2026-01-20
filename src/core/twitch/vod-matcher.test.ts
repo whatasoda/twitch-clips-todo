@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { matchRecordToVod, calculateVodOffset, linkRecordsToVod } from "./vod-matcher";
+import { describe, expect, it } from "vitest";
 import { createRecord } from "../record";
+import { calculateVodOffset, linkRecordsToVod, matchRecordToVod } from "./vod-matcher";
 
 describe("matchRecordToVod", () => {
   const vod = {

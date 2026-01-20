@@ -5,9 +5,7 @@ import { type TextVariantProps, text } from "../../../styled-system/recipes";
 
 type TextElement = "p" | "span" | "div" | "label" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "kbd";
 
-export interface TextProps
-  extends JSX.HTMLAttributes<HTMLElement>,
-    TextVariantProps {
+export interface TextProps extends JSX.HTMLAttributes<HTMLElement>, TextVariantProps {
   as?: TextElement;
 }
 

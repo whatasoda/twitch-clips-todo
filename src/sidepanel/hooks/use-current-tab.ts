@@ -1,4 +1,4 @@
-import { createSignal, onMount, onCleanup } from "solid-js";
+import { createSignal, onCleanup, onMount } from "solid-js";
 import { detectPage, type PageInfo } from "../../core/twitch";
 
 export function useCurrentTab() {
@@ -25,7 +25,7 @@ export function useCurrentTab() {
     const updatedListener = (
       _tabId: number,
       changeInfo: { url?: string; status?: string },
-      _tab: chrome.tabs.Tab
+      _tab: chrome.tabs.Tab,
     ) => {
       if (changeInfo.url || changeInfo.status === "complete") {
         updateCurrentTab();

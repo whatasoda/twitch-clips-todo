@@ -1,9 +1,9 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   createRecord,
-  isRecordLinked,
-  isRecordCompleted,
   groupRecordsByStreamer,
+  isRecordCompleted,
+  isRecordLinked,
   sortRecordsByDate,
 } from "./utils";
 
@@ -76,9 +76,27 @@ describe("isRecordCompleted", () => {
 describe("groupRecordsByStreamer", () => {
   it("groups records by streamerId", () => {
     const records = [
-      createRecord({ streamerId: "a", streamerName: "A", timestampSeconds: 1, sourceType: "live", vodId: null }),
-      createRecord({ streamerId: "b", streamerName: "B", timestampSeconds: 2, sourceType: "live", vodId: null }),
-      createRecord({ streamerId: "a", streamerName: "A", timestampSeconds: 3, sourceType: "live", vodId: null }),
+      createRecord({
+        streamerId: "a",
+        streamerName: "A",
+        timestampSeconds: 1,
+        sourceType: "live",
+        vodId: null,
+      }),
+      createRecord({
+        streamerId: "b",
+        streamerName: "B",
+        timestampSeconds: 2,
+        sourceType: "live",
+        vodId: null,
+      }),
+      createRecord({
+        streamerId: "a",
+        streamerName: "A",
+        timestampSeconds: 3,
+        sourceType: "live",
+        vodId: null,
+      }),
     ];
 
     const groups = groupRecordsByStreamer(records);
@@ -91,9 +109,36 @@ describe("sortRecordsByDate", () => {
   it("sorts records by createdAt in descending order by default", () => {
     const now = Date.now();
     const records = [
-      { ...createRecord({ streamerId: "s1", streamerName: "S1", timestampSeconds: 1, sourceType: "live" as const, vodId: null }), createdAt: new Date(now - 1000).toISOString() },
-      { ...createRecord({ streamerId: "s1", streamerName: "S1", timestampSeconds: 2, sourceType: "live" as const, vodId: null }), createdAt: new Date(now + 1000).toISOString() },
-      { ...createRecord({ streamerId: "s1", streamerName: "S1", timestampSeconds: 3, sourceType: "live" as const, vodId: null }), createdAt: new Date(now).toISOString() },
+      {
+        ...createRecord({
+          streamerId: "s1",
+          streamerName: "S1",
+          timestampSeconds: 1,
+          sourceType: "live" as const,
+          vodId: null,
+        }),
+        createdAt: new Date(now - 1000).toISOString(),
+      },
+      {
+        ...createRecord({
+          streamerId: "s1",
+          streamerName: "S1",
+          timestampSeconds: 2,
+          sourceType: "live" as const,
+          vodId: null,
+        }),
+        createdAt: new Date(now + 1000).toISOString(),
+      },
+      {
+        ...createRecord({
+          streamerId: "s1",
+          streamerName: "S1",
+          timestampSeconds: 3,
+          sourceType: "live" as const,
+          vodId: null,
+        }),
+        createdAt: new Date(now).toISOString(),
+      },
     ];
 
     const sorted = sortRecordsByDate(records);
@@ -105,8 +150,26 @@ describe("sortRecordsByDate", () => {
   it("sorts records in ascending order when specified", () => {
     const now = Date.now();
     const records = [
-      { ...createRecord({ streamerId: "s1", streamerName: "S1", timestampSeconds: 1, sourceType: "live" as const, vodId: null }), createdAt: new Date(now - 1000).toISOString() },
-      { ...createRecord({ streamerId: "s1", streamerName: "S1", timestampSeconds: 2, sourceType: "live" as const, vodId: null }), createdAt: new Date(now + 1000).toISOString() },
+      {
+        ...createRecord({
+          streamerId: "s1",
+          streamerName: "S1",
+          timestampSeconds: 1,
+          sourceType: "live" as const,
+          vodId: null,
+        }),
+        createdAt: new Date(now - 1000).toISOString(),
+      },
+      {
+        ...createRecord({
+          streamerId: "s1",
+          streamerName: "S1",
+          timestampSeconds: 2,
+          sourceType: "live" as const,
+          vodId: null,
+        }),
+        createdAt: new Date(now + 1000).toISOString(),
+      },
     ];
 
     const sorted = sortRecordsByDate(records, "asc");

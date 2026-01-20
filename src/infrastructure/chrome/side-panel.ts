@@ -14,7 +14,10 @@ export function createSidePanelAPI(): ChromeSidePanelAPI {
         // Fallback: get current window
         if (windowId === undefined) {
           const window = await chrome.windows.getCurrent();
-          windowId = window.id!;
+          if (window.id === undefined) {
+            throw new Error("Could not determine window ID for side panel");
+          }
+          windowId = window.id;
         }
       }
 

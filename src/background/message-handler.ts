@@ -1,9 +1,9 @@
-import type { RecordService, LinkingService } from "../services";
+import type { LinkingService, RecordService } from "../services";
 import type {
-  MessageToBackground,
-  MessageResponse,
   CreateRecordPayload,
   LinkVodPayload,
+  MessageResponse,
+  MessageToBackground,
 } from "../shared/types";
 
 export interface MessageHandlerDeps {
@@ -13,7 +13,7 @@ export interface MessageHandlerDeps {
 
 export async function handleMessage(
   message: MessageToBackground,
-  deps: MessageHandlerDeps
+  deps: MessageHandlerDeps,
 ): Promise<MessageResponse<unknown>> {
   const { recordService, linkingService } = deps;
 

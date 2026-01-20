@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { parseTimeString, formatTimestamp } from "./timestamp-parser";
+import { describe, expect, it } from "vitest";
+import { formatTimestamp, parseTimeString } from "./timestamp-parser";
 
 describe("parseTimeString", () => {
   it("parses HH:MM:SS format", () => {

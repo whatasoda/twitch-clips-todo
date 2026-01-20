@@ -2,10 +2,7 @@ import { styles } from "./styles";
 
 let toastTimeout: ReturnType<typeof setTimeout> | null = null;
 
-export function showToast(
-  message: string,
-  type: "success" | "error" | "info" = "info"
-): void {
+export function showToast(message: string, type: "success" | "error" | "info" = "info"): void {
   // Remove existing toast
   const existing = document.getElementById("twitch-clip-todo-toast");
   existing?.remove();

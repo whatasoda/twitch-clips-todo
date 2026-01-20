@@ -8,10 +8,5 @@ export interface ButtonProps
 
 export const Button = (props: ButtonProps) => {
   const [variantProps, buttonProps] = splitProps(props, ["variant", "size"]);
-  return (
-    <styled.button
-      class={button(variantProps)}
-      {...buttonProps}
-    />
-  );
+  return <styled.button class={button(variantProps)} {...buttonProps} />;
 };

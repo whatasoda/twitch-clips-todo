@@ -1,16 +1,16 @@
-import { setupNavigationListener, getCurrentPageInfo } from "./detector";
+import type { PageInfo } from "../core/twitch";
+import { getCurrentPageInfo, setupNavigationListener } from "./detector";
+import { createRecord, getPendingCount, linkVod, openSidePanel, updateMemo } from "./messaging";
 import { getPlayerTimestamp, getStreamerNameFromPage, getVodMetadata } from "./player";
-import { createRecord, updateMemo, getPendingCount, linkVod, openSidePanel } from "./messaging";
 import {
+  hideIndicator,
+  hideMemoInput,
   injectRecordButton,
   removeRecordButton,
-  showMemoInput,
-  hideMemoInput,
-  showToast,
   showIndicator,
-  hideIndicator,
+  showMemoInput,
+  showToast,
 } from "./ui";
-import type { PageInfo } from "../core/twitch";
 
 let pendingRecordId: string | null = null;
 
@@ -56,7 +56,7 @@ async function handleRecord(): Promise<void> {
         showToast("Moment recorded!", "success");
         pendingRecordId = null;
         refreshIndicator();
-      }
+      },
     );
   } catch (error) {
     showToast("Failed to record moment", "error");
@@ -109,7 +109,7 @@ async function handlePageChange(pageInfo: PageInfo): Promise<void> {
     // Auto-link VODs
     if (pageInfo.type === "vod") {
       const vodMeta = getVodMetadata();
-      if (vodMeta && vodMeta.streamerId) {
+      if (vodMeta?.streamerId) {
         try {
           const linked = await linkVod({
             vodId: vodMeta.vodId,

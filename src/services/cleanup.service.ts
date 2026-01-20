@@ -1,7 +1,7 @@
-import type { ChromeStorageAPI, ChromeAlarmsAPI } from "../infrastructure/chrome";
 import type { RecordStore } from "../core/record";
 import type { Settings } from "../core/settings";
 import { DEFAULT_SETTINGS } from "../core/settings";
+import type { ChromeAlarmsAPI, ChromeStorageAPI } from "../infrastructure/chrome";
 import { STORAGE_KEYS } from "../shared/constants";
 
 export interface CleanupServiceDeps {
@@ -44,9 +44,7 @@ export function createCleanupService(deps: CleanupServiceDeps): CleanupService {
       if (!store) return 0;
 
       const originalCount = store.records.length;
-      store.records = store.records.filter(
-        (record) => new Date(record.createdAt) > cutoffDate
-      );
+      store.records = store.records.filter((record) => new Date(record.createdAt) > cutoffDate);
       const deletedCount = originalCount - store.records.length;
 
       if (deletedCount > 0) {

@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { createRecordService, type RecordService } from "./record.service";
+import { beforeEach, describe, expect, it } from "vitest";
 import { createMockStorageAPI } from "../infrastructure/test-doubles";
+import { createRecordService, type RecordService } from "./record.service";
 
 describe("RecordService", () => {
   let service: RecordService;

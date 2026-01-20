@@ -1,16 +1,16 @@
-import { For, Show, createSignal } from "solid-js";
-import { Box, Flex, HStack } from "../../../styled-system/jsx";
-import { Badge } from "@/components/ui/badge";
 import { ChevronDown, ChevronRight } from "lucide-solid";
+import { createSignal, For, Show } from "solid-js";
+import { Badge } from "@/components/ui/badge";
+import { Box, Flex, HStack } from "../../../styled-system/jsx";
 import type { Record } from "../../core/record";
 import { RecordItem } from "./RecordItem";
 
 interface StreamerGroupProps {
   streamerName: string;
   records: Record[];
-  onUpdateMemo: (id: string, memo: string) => Promise<void>;
-  onDelete: (id: string) => Promise<void>;
-  onOpenClip: (record: Record) => Promise<void>;
+  onUpdateMemo: (id: string, memo: string) => Promise<unknown>;
+  onDelete: (id: string) => Promise<unknown>;
+  onOpenClip: (record: Record) => Promise<unknown>;
 }
 
 export function StreamerGroup(props: StreamerGroupProps) {
@@ -18,13 +18,7 @@ export function StreamerGroup(props: StreamerGroupProps) {
   const pendingCount = () => props.records.filter((r) => !r.completedAt).length;
 
   return (
-    <Box
-      mb="3"
-      borderWidth="1px"
-      borderColor="border.default"
-      borderRadius="md"
-      overflow="hidden"
-    >
+    <Box mb="3" borderWidth="1px" borderColor="border.default" borderRadius="md" overflow="hidden">
       <Flex
         as="button"
         w="full"

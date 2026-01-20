@@ -1,4 +1,7 @@
-import { Collapsible as ArkCollapsible, type CollapsibleRootProps as ArkRootProps } from "@ark-ui/solid/collapsible";
+import {
+  Collapsible as ArkCollapsible,
+  type CollapsibleRootProps as ArkRootProps,
+} from "@ark-ui/solid/collapsible";
 import type { JSX, ParentProps } from "solid-js";
 import { collapsible } from "../../../styled-system/recipes";
 
@@ -6,9 +9,7 @@ export interface CollapsibleRootProps extends ArkRootProps {}
 
 const Root = (props: CollapsibleRootProps) => {
   const classes = collapsible();
-  return (
-    <ArkCollapsible.Root class={classes.root} {...props} />
-  );
+  return <ArkCollapsible.Root class={classes.root} {...props} />;
 };
 
 export interface CollapsibleTriggerProps extends ParentProps {

@@ -1,7 +1,7 @@
+import path from "node:path";
 import { crx } from "@crxjs/vite-plugin";
 import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
-import path from "node:path";
 import manifest from "./manifest.json";
 
 export default defineConfig({

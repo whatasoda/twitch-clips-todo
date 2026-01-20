@@ -1,8 +1,8 @@
-import { describe, it, expect, vi } from "vitest";
-import { createCleanupService } from "./cleanup.service";
+import { describe, expect, it, vi } from "vitest";
+import type { RecordStore } from "../core/record";
 import { createMockStorageAPI } from "../infrastructure/test-doubles";
 import { STORAGE_KEYS } from "../shared/constants";
-import type { RecordStore } from "../core/record";
+import { createCleanupService } from "./cleanup.service";
 
 describe("CleanupService", () => {
   it("removes records older than cleanup threshold", async () => {

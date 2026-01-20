@@ -1,5 +1,5 @@
-import { Center, VStack, Box } from "../../../styled-system/jsx";
 import { Pin } from "lucide-solid";
+import { Box, Center, VStack } from "../../../styled-system/jsx";
 
 export function EmptyState() {
   return (
