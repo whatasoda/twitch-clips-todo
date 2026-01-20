@@ -37,6 +37,7 @@ export function useRecordActions() {
     const url = buildClipCreationUrl({
       vodId: record.vodId,
       offsetSeconds: record.timestampSeconds,
+      broadcasterLogin: record.streamerId,
     });
 
     await chrome.tabs.create({ url });
