@@ -26,11 +26,28 @@ export async function handleMessage(
         return { success: true, data: { isAuthenticated } };
       }
 
-      case "TWITCH_AUTHENTICATE": {
+      case "TWITCH_START_DEVICE_AUTH": {
         if (!twitchService) {
           return { success: false, error: "Twitch service not initialized" };
         }
-        await twitchService.authenticate();
+        const deviceCodeResponse = await twitchService.startDeviceAuth();
+        return { success: true, data: deviceCodeResponse };
+      }
+
+      case "TWITCH_POLL_TOKEN": {
+        if (!twitchService) {
+          return { success: false, error: "Twitch service not initialized" };
+        }
+        const { deviceCode, interval } = message.payload;
+        const token = await twitchService.pollForToken(deviceCode, interval);
+        return { success: true, data: token };
+      }
+
+      case "TWITCH_CANCEL_AUTH": {
+        if (!twitchService) {
+          return { success: false, error: "Twitch service not initialized" };
+        }
+        twitchService.cancelAuth();
         return { success: true, data: null };
       }
 

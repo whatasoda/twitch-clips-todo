@@ -1,6 +1,8 @@
 import type {
+  DeviceCodeResponse,
   TwitchApiClient,
   TwitchAuthAPI,
+  TwitchAuthToken,
   TwitchStream,
   TwitchUser,
   TwitchVideo,
@@ -49,7 +51,9 @@ export interface TwitchServiceDeps {
 
 export interface TwitchService {
   isAuthenticated(): Promise<boolean>;
-  authenticate(): Promise<void>;
+  startDeviceAuth(): Promise<DeviceCodeResponse>;
+  pollForToken(deviceCode: string, interval: number): Promise<TwitchAuthToken>;
+  cancelAuth(): void;
   logout(): Promise<void>;
   getStreamerInfo(login: string): Promise<StreamerInfo | null>;
   getVodMetadata(vodId: string): Promise<VodMetadata | null>;
@@ -105,8 +109,16 @@ export function createTwitchService(deps: TwitchServiceDeps): TwitchService {
       return client.isAuthenticated();
     },
 
-    async authenticate(): Promise<void> {
-      await auth.authenticate();
+    async startDeviceAuth(): Promise<DeviceCodeResponse> {
+      return auth.startDeviceAuth();
+    },
+
+    async pollForToken(deviceCode: string, interval: number): Promise<TwitchAuthToken> {
+      return auth.pollForToken(deviceCode, interval);
+    },
+
+    cancelAuth(): void {
+      auth.cancelPolling();
     },
 
     async logout(): Promise<void> {

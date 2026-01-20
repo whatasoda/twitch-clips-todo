@@ -1,14 +1,22 @@
 import { createResource, createSignal } from "solid-js";
+import type { DeviceCodeResponse } from "../../infrastructure/twitch-api/types";
 import type { MessageResponse } from "../../shared/types";
 
-interface AuthStatus {
+export type AuthStatus = "idle" | "pending" | "authenticated" | "error";
+
+interface AuthCheckResult {
   isAuthenticated: boolean;
 }
 
-async function getAuthStatus(): Promise<AuthStatus> {
+interface DeviceAuthState {
+  userCode: string;
+  verificationUri: string;
+}
+
+async function getAuthStatus(): Promise<AuthCheckResult> {
   const response = (await chrome.runtime.sendMessage({
     type: "TWITCH_GET_AUTH_STATUS",
-  })) as MessageResponse<AuthStatus>;
+  })) as MessageResponse<AuthCheckResult>;
 
   if (!response.success) {
     throw new Error(response.error);
@@ -16,14 +24,32 @@ async function getAuthStatus(): Promise<AuthStatus> {
   return response.data;
 }
 
-async function authenticate(): Promise<void> {
+async function startDeviceAuth(): Promise<DeviceCodeResponse> {
   const response = (await chrome.runtime.sendMessage({
-    type: "TWITCH_AUTHENTICATE",
-  })) as MessageResponse<null>;
+    type: "TWITCH_START_DEVICE_AUTH",
+  })) as MessageResponse<DeviceCodeResponse>;
 
   if (!response.success) {
     throw new Error(response.error);
   }
+  return response.data;
+}
+
+async function pollForToken(deviceCode: string, interval: number): Promise<void> {
+  const response = (await chrome.runtime.sendMessage({
+    type: "TWITCH_POLL_TOKEN",
+    payload: { deviceCode, interval },
+  })) as MessageResponse<unknown>;
+
+  if (!response.success) {
+    throw new Error(response.error);
+  }
+}
+
+async function cancelAuth(): Promise<void> {
+  await chrome.runtime.sendMessage({
+    type: "TWITCH_CANCEL_AUTH",
+  });
 }
 
 async function logout(): Promise<void> {
@@ -37,42 +63,85 @@ async function logout(): Promise<void> {
 }
 
 export function useAuth() {
-  const [isLoading, setIsLoading] = createSignal(false);
+  const [status, setStatus] = createSignal<AuthStatus>("idle");
+  const [deviceAuth, setDeviceAuth] = createSignal<DeviceAuthState | null>(null);
   const [error, setError] = createSignal<Error | null>(null);
 
-  const [authStatus, { refetch }] = createResource(getAuthStatus);
+  const [authCheck, { refetch }] = createResource(getAuthStatus);
 
-  const handleAuthenticate = async () => {
-    setIsLoading(true);
+  // Initialize status based on auth check
+  const isAuthenticated = () => {
+    const check = authCheck();
+    if (check?.isAuthenticated) {
+      if (status() !== "authenticated") {
+        setStatus("authenticated");
+      }
+      return true;
+    }
+    return false;
+  };
+
+  const handleStartAuth = async () => {
+    setStatus("pending");
     setError(null);
+    setDeviceAuth(null);
+
     try {
-      await authenticate();
+      // Step 1: Get device code
+      const deviceCodeResponse = await startDeviceAuth();
+
+      setDeviceAuth({
+        userCode: deviceCodeResponse.user_code,
+        verificationUri: deviceCodeResponse.verification_uri,
+      });
+
+      // Step 2: Start polling for token (this will block until user authorizes or times out)
+      await pollForToken(deviceCodeResponse.device_code, deviceCodeResponse.interval);
+
+      // Success - user authorized
+      setStatus("authenticated");
+      setDeviceAuth(null);
       await refetch();
     } catch (err) {
-      setError(err instanceof Error ? err : new Error("Authentication failed"));
-    } finally {
-      setIsLoading(false);
+      const errorObj = err instanceof Error ? err : new Error("Authentication failed");
+
+      // Don't set error for cancellation
+      if (errorObj.name === "AbortError" || errorObj.message.includes("cancelled")) {
+        setStatus("idle");
+      } else {
+        setStatus("error");
+        setError(errorObj);
+      }
+      setDeviceAuth(null);
     }
   };
 
+  const handleCancelAuth = async () => {
+    await cancelAuth();
+    setStatus("idle");
+    setDeviceAuth(null);
+    setError(null);
+  };
+
   const handleLogout = async () => {
-    setIsLoading(true);
     setError(null);
     try {
       await logout();
+      setStatus("idle");
       await refetch();
     } catch (err) {
       setError(err instanceof Error ? err : new Error("Logout failed"));
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return {
-    isAuthenticated: () => authStatus()?.isAuthenticated ?? false,
-    isLoading: () => isLoading() || authStatus.loading,
+    status,
+    isAuthenticated,
+    isLoading: () => authCheck.loading || status() === "pending",
+    deviceAuth,
     error,
-    authenticate: handleAuthenticate,
+    startAuth: handleStartAuth,
+    cancelAuth: handleCancelAuth,
     logout: handleLogout,
     refetch,
   };

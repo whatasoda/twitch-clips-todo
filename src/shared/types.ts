@@ -26,7 +26,9 @@ export type MessageToBackground =
   | { type: "OPEN_SIDE_PANEL" }
   // Twitch API messages
   | { type: "TWITCH_GET_AUTH_STATUS" }
-  | { type: "TWITCH_AUTHENTICATE" }
+  | { type: "TWITCH_START_DEVICE_AUTH" }
+  | { type: "TWITCH_POLL_TOKEN"; payload: { deviceCode: string; interval: number } }
+  | { type: "TWITCH_CANCEL_AUTH" }
   | { type: "TWITCH_LOGOUT" }
   | { type: "TWITCH_GET_STREAMER_INFO"; payload: { login: string } }
   | { type: "TWITCH_GET_VOD_METADATA"; payload: { vodId: string } }

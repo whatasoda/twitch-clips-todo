@@ -6,7 +6,6 @@ import {
   createRecordService,
   createTwitchService,
 } from "../services";
-import { TWITCH_CLIENT_ID } from "../shared/constants";
 import type { MessageToBackground } from "../shared/types";
 import { handleMessage } from "./message-handler";
 
@@ -24,10 +23,7 @@ const cleanupService = createCleanupService({
 // Initialize Twitch API services (only if CLIENT_ID is configured)
 const twitchAuth = createTwitchAuthAPI();
 const twitchClient = createTwitchApiClient({ auth: twitchAuth });
-const twitchService =
-  TWITCH_CLIENT_ID !== "__TWITCH_CLIENT_ID__"
-    ? createTwitchService({ auth: twitchAuth, client: twitchClient })
-    : null;
+const twitchService = createTwitchService({ auth: twitchAuth, client: twitchClient });
 
 if (!twitchService) {
   console.warn(
