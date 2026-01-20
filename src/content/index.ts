@@ -14,7 +14,9 @@ import { getPlayerTimestamp, getStreamerNameFromPage, getVodMetadata } from "./p
 import {
   hideIndicator,
   hideMemoInput,
+  injectChatButton,
   injectRecordButton,
+  removeChatButton,
   removeRecordButton,
   showIndicator,
   showMemoInput,
@@ -151,12 +153,14 @@ async function refreshIndicator(): Promise<void> {
 async function handlePageChange(pageInfo: PageInfo): Promise<void> {
   // Clean up UI
   removeRecordButton();
+  removeChatButton();
   hideIndicator();
   hideMemoInput();
 
   if (pageInfo.type === "live" || pageInfo.type === "vod") {
-    // Inject record button only - NO indicator during viewing
+    // Inject record buttons - NO indicator during viewing
     injectRecordButton(handleRecord);
+    injectChatButton(handleRecord);
 
     // Auto-link VODs
     if (pageInfo.type === "vod" && pageInfo.vodId) {
