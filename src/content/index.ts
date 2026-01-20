@@ -7,7 +7,6 @@ import {
   getStreamerInfo,
   getVodMetadataFromApi,
   linkVod,
-  openSidePanel,
   updateMemo,
 } from "./messaging";
 import { getPlayerTimestamp, getStreamerNameFromPage, getVodMetadata } from "./player";
@@ -122,12 +121,15 @@ async function refreshIndicator(): Promise<void> {
   const pageInfo = getCurrentPageInfo();
   if (!pageInfo.streamerId) return;
 
+  // Don't show indicator during live/VOD viewing
+  if (pageInfo.type === "live" || pageInfo.type === "vod") {
+    return;
+  }
+
   try {
     const count = await getPendingCount(pageInfo.streamerId);
     if (count > 0) {
-      showIndicator(count, () => {
-        openSidePanel().catch(console.error);
-      });
+      showIndicator(count);
     } else {
       hideIndicator();
     }
@@ -143,22 +145,8 @@ async function handlePageChange(pageInfo: PageInfo): Promise<void> {
   hideMemoInput();
 
   if (pageInfo.type === "live" || pageInfo.type === "vod") {
-    // Inject record button
+    // Inject record button only - NO indicator during viewing
     injectRecordButton(handleRecord);
-
-    // Show indicator if there are pending records
-    if (pageInfo.streamerId) {
-      try {
-        const count = await getPendingCount(pageInfo.streamerId);
-        if (count > 0) {
-          showIndicator(count, () => {
-            openSidePanel().catch(console.error);
-          });
-        }
-      } catch (error) {
-        console.error("[Twitch Clip Todo] Failed to get pending count:", error);
-      }
-    }
 
     // Auto-link VODs
     if (pageInfo.type === "vod" && pageInfo.vodId) {
@@ -206,9 +194,7 @@ async function handlePageChange(pageInfo: PageInfo): Promise<void> {
     try {
       const count = await getPendingCount(pageInfo.streamerId);
       if (count > 0) {
-        showIndicator(count, () => {
-          openSidePanel().catch(console.error);
-        });
+        showIndicator(count);
       }
     } catch (error) {
       console.error("[Twitch Clip Todo] Failed to get pending count:", error);
