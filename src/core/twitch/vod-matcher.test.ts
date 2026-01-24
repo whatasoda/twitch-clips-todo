@@ -12,7 +12,7 @@ describe("matchRecordToVod", () => {
   const vod = {
     vodId: "123",
     streamerId: "streamer1",
-    startedAt: new Date("2024-01-01T10:00:00Z"),
+    startedAt: "2024-01-01T10:00:00Z",
     durationSeconds: 7200, // 2 hours
   };
 
@@ -95,7 +95,7 @@ describe("calculateVodOffset", () => {
       recordedAt: "2024-01-01T11:30:00Z",
     };
 
-    const offset = calculateVodOffset(record, new Date("2024-01-01T10:00:00Z"));
+    const offset = calculateVodOffset(record, "2024-01-01T10:00:00Z");
     expect(offset).toBe(5400); // 1.5 hours = 5400 seconds
   });
 
@@ -112,7 +112,7 @@ describe("calculateVodOffset", () => {
       recordedAt: "2024-01-01T09:00:00Z",
     };
 
-    const offset = calculateVodOffset(record, new Date("2024-01-01T10:00:00Z"));
+    const offset = calculateVodOffset(record, "2024-01-01T10:00:00Z");
     expect(offset).toBe(0);
   });
 });
@@ -121,7 +121,7 @@ describe("linkRecordsToVod", () => {
   const vod = {
     vodId: "123",
     streamerId: "streamer1",
-    startedAt: new Date("2024-01-01T10:00:00Z"),
+    startedAt: "2024-01-01T10:00:00Z",
     durationSeconds: 7200,
   };
 
@@ -174,7 +174,7 @@ describe("matchRecordToVodByStreamId", () => {
     vodId: "123",
     streamerId: "streamer1",
     streamId: "broadcast123",
-    startedAt: new Date("2024-01-01T10:00:00Z"),
+    startedAt: "2024-01-01T10:00:00Z",
     durationSeconds: 7200,
   };
 
@@ -264,7 +264,7 @@ describe("linkRecordsByStreamId", () => {
     vodId: "123",
     streamerId: "streamer1",
     streamId: "broadcast123",
-    startedAt: new Date("2024-01-01T10:00:00Z"),
+    startedAt: "2024-01-01T10:00:00Z",
     durationSeconds: 7200,
   };
 

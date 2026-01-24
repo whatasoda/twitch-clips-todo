@@ -174,7 +174,7 @@ async function handlePageChange(pageInfo: PageInfo): Promise<void> {
             vodId: apiVodMeta.vodId,
             streamerId: apiVodMeta.streamerId,
             streamId: apiVodMeta.streamId,
-            startedAt: apiVodMeta.startedAt.toISOString(),
+            startedAt: apiVodMeta.startedAt,
             durationSeconds: apiVodMeta.durationSeconds,
           });
           if (linked.length > 0) {

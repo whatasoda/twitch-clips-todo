@@ -111,7 +111,7 @@ export function createVodDiscoveryService(deps: VodDiscoveryServiceDeps): VodDis
             vodId: vod.vodId,
             streamerId: vod.streamerId,
             streamId: vod.streamId,
-            startedAt: vod.startedAt.toISOString(),
+            startedAt: vod.startedAt,
             durationSeconds: vod.durationSeconds,
           });
 

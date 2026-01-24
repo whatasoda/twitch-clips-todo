@@ -8,7 +8,6 @@ import type {
   TwitchUser,
   TwitchVideo,
 } from "../infrastructure/twitch-api";
-import { CACHE_TTL, STORAGE_KEYS } from "../shared/constants";
 import {
   createStreamsEndpoint,
   createUsersEndpoint,
@@ -18,6 +17,7 @@ import {
   type UsersEndpoint,
   type VideosEndpoint,
 } from "../infrastructure/twitch-api/endpoints";
+import { CACHE_TTL, STORAGE_KEYS } from "../shared/constants";
 
 export interface StreamerInfo {
   id: string;
@@ -31,7 +31,7 @@ export interface VodMetadata {
   streamerId: string;
   streamerName: string;
   title: string;
-  startedAt: Date;
+  startedAt: string; // ISO 8601
   durationSeconds: number;
   streamId: string | null;
 }
@@ -41,7 +41,7 @@ export interface LiveStreamInfo {
   userId: string;
   userLogin: string;
   userName: string;
-  startedAt: Date;
+  startedAt: string; // ISO 8601
   title: string;
   gameName: string;
 }
@@ -101,7 +101,10 @@ export function createTwitchService(deps: TwitchServiceDeps): TwitchService {
     return (await storage.get<StreamCache>(STORAGE_KEYS.STREAM_CACHE)) ?? {};
   }
 
-  async function updatePersistentStreamCache(login: string, entry: CacheEntry<LiveStreamInfo | null>): Promise<void> {
+  async function updatePersistentStreamCache(
+    login: string,
+    entry: CacheEntry<LiveStreamInfo | null>,
+  ): Promise<void> {
     const cache = await getPersistentStreamCache();
     cache[login] = entry;
     await storage.set(STORAGE_KEYS.STREAM_CACHE, cache);
@@ -112,7 +115,10 @@ export function createTwitchService(deps: TwitchServiceDeps): TwitchService {
     return (await storage.get<VodCache>(STORAGE_KEYS.VOD_CACHE)) ?? {};
   }
 
-  async function updatePersistentVodCache(userId: string, entry: CacheEntry<VodMetadata[]>): Promise<void> {
+  async function updatePersistentVodCache(
+    userId: string,
+    entry: CacheEntry<VodMetadata[]>,
+  ): Promise<void> {
     const cache = await getPersistentVodCache();
     cache[userId] = entry;
     await storage.set(STORAGE_KEYS.VOD_CACHE, cache);
@@ -133,7 +139,7 @@ export function createTwitchService(deps: TwitchServiceDeps): TwitchService {
       streamerId: video.user_login,
       streamerName: video.user_name,
       title: video.title,
-      startedAt: new Date(video.created_at),
+      startedAt: video.created_at,
       durationSeconds: parseTwitchDuration(video.duration),
       streamId: video.stream_id,
     };
@@ -145,7 +151,7 @@ export function createTwitchService(deps: TwitchServiceDeps): TwitchService {
       userId: stream.user_id,
       userLogin: stream.user_login,
       userName: stream.user_name,
-      startedAt: new Date(stream.started_at),
+      startedAt: stream.started_at,
       title: stream.title,
       gameName: stream.game_name,
     };

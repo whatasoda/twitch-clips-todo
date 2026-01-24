@@ -28,7 +28,7 @@ export function createLinkingService(deps: LinkingServiceDeps): LinkingService {
         vodId: payload.vodId,
         streamerId: payload.streamerId,
         streamId: payload.streamId,
-        startedAt: new Date(payload.startedAt),
+        startedAt: payload.startedAt,
         durationSeconds: payload.durationSeconds,
       };
 
