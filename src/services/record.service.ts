@@ -1,4 +1,5 @@
-import type { CreateRecordPayload, Record, RecordStore } from "../core/record";
+import type { Record, RecordStore } from "../core/record";
+import type { CreateRecordPayload } from "../shared/types";
 import { createEmptyStore, createRecord } from "../core/record";
 import type { ChromeStorageAPI } from "../infrastructure/chrome";
 import { STORAGE_KEYS } from "../shared/constants";
