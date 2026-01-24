@@ -16,7 +16,7 @@ Based on quick-tabby's architecture, using layered design with dependency inject
 │           │                      │                              │
 │           │                      ▼                              │
 │           │             ┌─────────────────┐                    │
-│           │             │  Side Panel     │                    │
+│           │             │  Popup          │                    │
 │           │             │  (Solid.js)     │                    │
 │           │             └────────┬────────┘                    │
 │           │                      │                              │
@@ -31,7 +31,7 @@ Based on quick-tabby's architecture, using layered design with dependency inject
 ### Layer Structure
 
 ```
-Presentation Layer (Side Panel, Content Script UI)
+Presentation Layer (Popup, Content Script UI)
     ↓
 Custom Hooks / Signals (State & Logic)
     ↓
@@ -60,16 +60,22 @@ Infrastructure Layer (Chrome API Abstraction)
 │   │   └── index.ts             # Entry point, service initialization
 │   │
 │   ├── /content                 # Content Script
-│   │   ├── index.ts             # Entry point
+│   │   ├── index.ts             # Entry point (controller)
+│   │   ├── record-handler.ts    # Record creation logic
+│   │   ├── page-handler.ts      # Page change handling
 │   │   ├── detector.ts          # Page type detection
+│   │   ├── messaging.ts         # Background messaging utils
 │   │   ├── player.ts            # Player interaction
 │   │   └── /ui                  # Content Script UI
-│   │       ├── RecordButton.ts
-│   │       ├── MemoInput.ts
-│   │       ├── Indicator.ts
-│   │       └── Toast.ts
+│   │       ├── shadow-dom.ts    # Shadow DOM factory
+│   │       ├── injection.ts     # Element injection utility
+│   │       ├── record-button.ts
+│   │       ├── chat-button.ts
+│   │       ├── floating-widget.ts
+│   │       ├── memo-input.ts
+│   │       └── toast.ts
 │   │
-│   ├── /sidepanel               # Side Panel UI
+│   ├── /popup                   # Popup UI
 │   │   ├── index.html           # Entry point
 │   │   ├── main.tsx             # Solid.js render
 │   │   ├── index.tsx            # App component
@@ -88,6 +94,9 @@ Infrastructure Layer (Chrome API Abstraction)
 │   │   ├── record.service.ts    # Record CRUD
 │   │   ├── linking.service.ts   # VOD linking
 │   │   ├── cleanup.service.ts   # Cleanup logic
+│   │   ├── twitch.service.ts    # Twitch API wrapper
+│   │   ├── twitch-mappers.ts    # API response mappers
+│   │   ├── cache.service.ts     # Memory/persistent caching
 │   │   └── *.test.ts            # Colocated tests
 │   │
 │   ├── /core                    # Domain logic layer
@@ -110,8 +119,16 @@ Infrastructure Layer (Chrome API Abstraction)
 │   │   │   ├── runtime.ts
 │   │   │   ├── tabs.ts
 │   │   │   ├── commands.ts
-│   │   │   ├── sidePanel.ts
 │   │   │   └── types.ts
+│   │   ├── /twitch-api          # Twitch API client
+│   │   │   ├── index.ts         # Barrel exports
+│   │   │   ├── auth.ts          # Device auth flow
+│   │   │   ├── client.ts        # HTTP client
+│   │   │   ├── types.ts         # API response types
+│   │   │   └── /endpoints       # API endpoint wrappers
+│   │   │       ├── users.ts
+│   │   │       ├── videos.ts
+│   │   │       └── streams.ts
 │   │   └── /test-doubles        # Test mocks
 │   │
 │   └── /shared                  # Shared modules
@@ -156,7 +173,7 @@ Infrastructure Layer (Chrome API Abstraction)
 - Keyboard shortcut handling
 - VOD auto-linking logic
 - Scheduled cleanup
-- Port communication with Side Panel
+- Port communication with Popup
 
 **Service Initialization (DI Pattern):**
 
@@ -185,10 +202,10 @@ const cleanupService = createCleanupService({
 });
 ```
 
-### 3. Side Panel
+### 3. Popup
 
 **Responsibilities:**
-- Display record list
+- Display record list grouped by streamer
 - Edit and delete records
 - Navigate to clip creation page
 
@@ -249,7 +266,7 @@ export const DEFAULT_SETTINGS: Settings = {
 ```typescript
 // src/shared/types.ts
 
-// Content Script / Side Panel → Service Worker
+// Content Script / Popup → Service Worker
 export type MessageToBackground =
   | { type: 'CREATE_RECORD'; payload: CreateRecordPayload }
   | { type: 'UPDATE_MEMO'; payload: { id: string; memo: string } }
@@ -273,7 +290,7 @@ export interface LinkVodPayload {
   vodStartedAt: string;
 }
 
-// Service Worker → Content Script / Side Panel (response)
+// Service Worker → Content Script / Popup (response)
 export type MessageResponse<T> =
   | { success: true; data: T }
   | { success: false; error: string };
@@ -631,7 +648,7 @@ User navigates to VOD page
 |----------|------------|
 | Build | Vite + @crxjs/vite-plugin |
 | Language | TypeScript (strict) |
-| UI (Side Panel) | Solid.js |
+| UI (Popup) | Solid.js |
 | Styling | Panda CSS |
 | Testing | Vitest |
 | Lint/Format | Biome |
@@ -653,34 +670,80 @@ User navigates to VOD page
 
 ---
 
-## Future Extension Points
+## TwitchService Interface
 
-### API Integration Module
-
-```
-src/infrastructure/twitch-api/
-├── index.ts              # createTwitchApiClient factory
-├── auth.ts               # OAuth authentication
-├── videos.ts             # VOD retrieval
-├── clips.ts              # Clip creation
-└── types.ts
-```
-
-Not implemented yet, but the following interface is anticipated:
+The TwitchService provides Twitch API integration with caching:
 
 ```typescript
-export interface TwitchApiClient {
-  getVideos(userId: string): Promise<Video[]>;
-  createClip(broadcasterId: string): Promise<Clip>;
-}
+// src/services/twitch.service.ts
 
-// Current noop implementation
-export function createNoopTwitchApiClient(): TwitchApiClient {
-  return {
-    async getVideos() { return []; },
-    async createClip() { throw new Error('API not configured'); },
-  };
+export interface TwitchService {
+  isAuthenticated(): Promise<boolean>;
+  startDeviceAuth(): Promise<DeviceCodeResponse>;
+  pollForToken(deviceCode: string, interval: number): Promise<TwitchAuthToken>;
+  cancelAuth(): void;
+  logout(): Promise<void>;
+  getStreamerInfo(login: string): Promise<StreamerInfo | null>;
+  getVodMetadata(vodId: string): Promise<VodMetadata | null>;
+  getCurrentStream(login: string): Promise<LiveStreamInfo | null>;
+  getCurrentStreamCached(login: string): Promise<LiveStreamInfo | null>;
+  invalidateStreamCache(login: string): Promise<void>;
+  getRecentVodsByUserId(userId: string, limit?: number): Promise<VodMetadata[]>;
+  findVodByStreamId(userId: string, streamId: string): Promise<VodMetadata | null>;
 }
 ```
 
-Because the service layer uses DI, swapping in a real implementation enables API integration with minimal changes.
+### Data Mappers
+
+```typescript
+// src/services/twitch-mappers.ts
+
+export interface StreamerInfo {
+  id: string;
+  login: string;
+  displayName: string;
+  profileImageUrl: string | null;
+}
+
+export interface VodMetadata {
+  vodId: string;
+  streamerId: string;
+  streamerName: string;
+  title: string;
+  startedAt: string;
+  durationSeconds: number;
+  streamId: string | null;
+}
+
+export interface LiveStreamInfo {
+  streamId: string;
+  userId: string;
+  userLogin: string;
+  userName: string;
+  startedAt: string;
+  title: string;
+  gameName: string;
+}
+```
+
+### Cache Service
+
+```typescript
+// src/services/cache.service.ts
+
+export interface CacheEntry<T> {
+  data: T;
+  expiresAt: number;
+}
+
+export interface CacheService<T> {
+  get(key: string): Promise<T | null>;
+  set(key: string, data: T, ttlMs: number): Promise<void>;
+  delete(key: string): Promise<void>;
+}
+
+// Factory functions:
+createMemoryCache<T>(): CacheService<T>
+createPersistentCache<T>(deps, storageKey): CacheService<T>
+createTieredCache<T>(memory, persistent): CacheService<T>
+```
