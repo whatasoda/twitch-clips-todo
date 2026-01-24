@@ -61,7 +61,7 @@ export function RecordItem(props: RecordItemProps) {
   };
 
   const isCompleted = () => props.record.completedAt !== null;
-  const canCreateClip = () => props.record.vodId !== null || props.record.broadcastId !== null;
+  const canCreateClip = () => props.record.vodId !== null;
   const canFindVod = () => props.record.broadcastId !== null && props.record.vodId === null;
 
   return (
@@ -98,12 +98,7 @@ export function RecordItem(props: RecordItemProps) {
             </Button>
           </Show>
           <Show when={!canCreateClip() && canFindVod()}>
-            <Button
-              size="xs"
-              variant="outline"
-              onClick={handleFindVod}
-              disabled={isLoading()}
-            >
+            <Button size="xs" variant="outline" onClick={handleFindVod} disabled={isLoading()}>
               <Search size={14} /> Find VOD
             </Button>
           </Show>

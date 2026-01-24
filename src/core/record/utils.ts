@@ -27,7 +27,7 @@ export function isRecordLinked(record: Record): boolean {
 }
 
 export function canCreateClip(record: Record): boolean {
-  return record.vodId !== null || record.broadcastId !== null;
+  return record.vodId !== null;
 }
 
 export function isRecordCompleted(record: Record): boolean {
