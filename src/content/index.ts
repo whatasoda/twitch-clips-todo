@@ -12,17 +12,16 @@ import {
 } from "./messaging";
 import { getPlayerTimestamp, getStreamerNameFromPage } from "./player";
 import {
-  hideIndicator,
+  hideFloatingWidget,
   hideMemoInput,
-  injectChannelButton,
   injectChatButton,
   injectRecordButton,
-  removeChannelButton,
   removeChatButton,
   removeRecordButton,
-  showIndicator,
+  showFloatingWidget,
   showMemoInput,
   showToast,
+  updateFloatingWidgetCount,
 } from "./ui";
 
 let pendingRecordId: string | null = null;
@@ -114,7 +113,7 @@ async function handleRecord(): Promise<void> {
         }
         showToast("Moment recorded!", "success");
         pendingRecordId = null;
-        refreshIndicator();
+        refreshFloatingWidget();
       },
       async () => {
         // Cancel: Delete the pending record
@@ -128,7 +127,7 @@ async function handleRecord(): Promise<void> {
           }
         }
         pendingRecordId = null;
-        refreshIndicator();
+        refreshFloatingWidget();
       },
     );
   } catch (error) {
@@ -137,24 +136,19 @@ async function handleRecord(): Promise<void> {
   }
 }
 
-async function refreshIndicator(): Promise<void> {
+async function refreshFloatingWidget(): Promise<void> {
   const pageInfo = getCurrentPageInfo();
   if (!pageInfo.streamerId) return;
-
-  // Don't show indicator during live/VOD viewing
-  if (pageInfo.type === "live" || pageInfo.type === "vod") {
-    return;
-  }
 
   try {
     const count = await getPendingCount(pageInfo.streamerId);
     if (count > 0) {
-      showIndicator(count);
+      updateFloatingWidgetCount(count);
     } else {
-      hideIndicator();
+      hideFloatingWidget();
     }
   } catch (error) {
-    console.error("[Twitch Clip Todo] Failed to refresh indicator:", error);
+    console.error("[Twitch Clip Todo] Failed to refresh floating widget:", error);
   }
 }
 
@@ -162,22 +156,19 @@ async function handlePageChange(pageInfo: PageInfo): Promise<void> {
   // Clean up UI
   removeRecordButton();
   removeChatButton();
-  removeChannelButton();
-  hideIndicator();
+  hideFloatingWidget();
   hideMemoInput();
 
   if (pageInfo.type === "live" || pageInfo.type === "vod") {
-    // Inject record buttons - NO indicator during viewing
+    // Inject record buttons
     injectRecordButton(handleRecord);
     injectChatButton(handleRecord);
 
-    // Auto-link VODs (requires stream_id from API)
+    // Auto-link VODs (requires API for streamerId)
     if (pageInfo.type === "vod" && pageInfo.vodId) {
       try {
-        // Get VOD metadata from API (required for stream_id)
         const apiVodMeta = await getVodMetadataFromApi(pageInfo.vodId);
 
-        // Only link if we have stream_id from API (no DOM fallback for linking)
         if (apiVodMeta?.streamId) {
           const linked = await linkVod({
             vodId: apiVodMeta.vodId,
@@ -194,15 +185,14 @@ async function handlePageChange(pageInfo: PageInfo): Promise<void> {
         console.error("[Twitch Clip Todo] VOD linking failed:", error);
       }
     }
-  } else if (pageInfo.type === "channel" && pageInfo.streamerId) {
-    // Show channel button and indicator on channel pages
+  }
+
+  // Show floating widget on all Twitch pages if there are pending records
+  if (pageInfo.streamerId) {
     try {
       const count = await getPendingCount(pageInfo.streamerId);
       if (count > 0) {
-        // Inject button into channel header (next to follow button)
-        injectChannelButton(count, openSidePanel);
-        // Also show indicator as fallback (in case header injection fails)
-        showIndicator(count);
+        showFloatingWidget(count, openSidePanel);
       }
     } catch (error) {
       console.error("[Twitch Clip Todo] Failed to get pending count:", error);

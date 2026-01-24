@@ -10,7 +10,7 @@ export interface PageInfo {
 // Channel: https://www.twitch.tv/{username}/videos (or /clips, /about, etc.)
 
 const VOD_PATTERN = /^\/videos\/(\d+)/;
-const CHANNEL_SUBPAGE_PATTERN = /^\/([a-zA-Z0-9_]+)\/(videos|clips|about|schedule)/;
+const CHANNEL_SUBPAGE_PATTERN = /^\/([a-zA-Z0-9_]+)\/(videos|clips|about|schedule|chat)/;
 const LIVE_PATTERN = /^\/([a-zA-Z0-9_]+)$/;
 const EXCLUDED_PATHS = [
   "directory",
