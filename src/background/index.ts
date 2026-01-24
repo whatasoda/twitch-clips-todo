@@ -50,6 +50,20 @@ vodDiscoveryService.initialize();
 
 // Message handler
 chrome.runtime.onMessage.addListener((message: MessageToBackground, _sender, sendResponse) => {
+  // Handle OPEN_POPUP
+  if (message.type === "OPEN_POPUP") {
+    chrome.action
+      .openPopup()
+      .then(() => sendResponse({ success: true, data: null }))
+      .catch((error) =>
+        sendResponse({
+          success: false,
+          error: error instanceof Error ? error.message : "Failed to open popup",
+        }),
+      );
+    return true;
+  }
+
   handleMessage(message, { recordService, linkingService, twitchService, vodDiscoveryService })
     .then(sendResponse)
     .catch((error) =>

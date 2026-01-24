@@ -177,4 +177,73 @@ export const styles = {
       font-size: 12px;
     `,
   },
+  // Channel header button (next to follow button) - DEPRECATED, keeping for reference
+  channelButton: {
+    base: `
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 30px;
+      padding: 0 10px;
+      border: none;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      cursor: pointer;
+      transition: background 0.1s ease;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+    `,
+    hover: `background: rgba(255, 255, 255, 0.25);`,
+    badge: `
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 9px;
+      background: #9147ff;
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+    `,
+  },
+  // Floating widget for pending clips count
+  floatingWidget: {
+    base: `
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 12px;
+      border: none;
+      border-radius: 18px;
+      background: rgba(145, 71, 255, 0.85);
+      color: white;
+      cursor: grab;
+      transition: background 0.1s ease, transform 0.1s ease;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      user-select: none;
+    `,
+    badge: `
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: 10px;
+      background: white;
+      color: #9147ff;
+      font-size: 12px;
+      font-weight: bold;
+    `,
+  },
 };
