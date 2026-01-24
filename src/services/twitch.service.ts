@@ -16,10 +16,10 @@ import {
 import { CACHE_TTL, STORAGE_KEYS } from "../shared/constants";
 import type { CacheEntry } from "./cache.service";
 import {
+  type LiveStreamInfo,
   mapStreamToLiveStreamInfo,
   mapUserToStreamerInfo,
   mapVideoToVodMetadata,
-  type LiveStreamInfo,
   type StreamerInfo,
   type VodMetadata,
 } from "./twitch-mappers";

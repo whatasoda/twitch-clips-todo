@@ -6,10 +6,7 @@ export interface ShadowDOMHost {
 /**
  * Create a Shadow DOM host element with an attached shadow root.
  */
-export function createShadowHost(
-  id: string,
-  mode: "open" | "closed" = "closed",
-): ShadowDOMHost {
+export function createShadowHost(id: string, mode: "open" | "closed" = "closed"): ShadowDOMHost {
   const host = document.createElement("div");
   host.id = id;
   const shadow = host.attachShadow({ mode });

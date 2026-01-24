@@ -11,7 +11,8 @@ function openPopup(): void {
 // Initialize handlers with dependencies
 const recordHandler = createRecordHandler({
   getCurrentPageInfo,
-  onRecordComplete: () => pageHandler.refreshFloatingWidget(getCurrentPageInfo().streamerId ?? undefined),
+  onRecordComplete: () =>
+    pageHandler.refreshFloatingWidget(getCurrentPageInfo().streamerId ?? undefined),
 });
 
 const pageHandler = createPageHandler({
