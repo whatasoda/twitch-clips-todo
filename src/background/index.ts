@@ -23,7 +23,11 @@ const cleanupService = createCleanupService({
 // Initialize Twitch API services (only if CLIENT_ID is configured)
 const twitchAuth = createTwitchAuthAPI();
 const twitchClient = createTwitchApiClient({ auth: twitchAuth });
-const twitchService = createTwitchService({ auth: twitchAuth, client: twitchClient });
+const twitchService = createTwitchService({
+  auth: twitchAuth,
+  client: twitchClient,
+  storage: chromeAPI.storage,
+});
 
 if (!twitchService) {
   console.warn(
