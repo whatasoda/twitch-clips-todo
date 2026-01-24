@@ -9,7 +9,7 @@ describe("buildClipCreationUrl", () => {
       broadcasterLogin: "streamer1",
     });
     expect(url).toBe(
-      "https://clips.twitch.tv/create?broadcasterLogin=streamer1&offsetSeconds=5445&vodID=1234567890",
+      "https://clips.twitch.tv/create?vodID=1234567890&broadcasterLogin=streamer1&offsetSeconds=5445",
     );
   });
 
@@ -20,7 +20,7 @@ describe("buildClipCreationUrl", () => {
       broadcasterLogin: "testuser",
     });
     expect(url).toBe(
-      "https://clips.twitch.tv/create?broadcasterLogin=testuser&offsetSeconds=0&vodID=123",
+      "https://clips.twitch.tv/create?vodID=123&broadcasterLogin=testuser&offsetSeconds=0",
     );
   });
 
@@ -31,7 +31,7 @@ describe("buildClipCreationUrl", () => {
       broadcasterLogin: "channel",
     });
     expect(url).toBe(
-      "https://clips.twitch.tv/create?broadcasterLogin=channel&offsetSeconds=86399&vodID=123",
+      "https://clips.twitch.tv/create?vodID=123&broadcasterLogin=channel&offsetSeconds=86399",
     );
   });
 });
