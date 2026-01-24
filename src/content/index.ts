@@ -14,8 +14,10 @@ import { getPlayerTimestamp, getStreamerNameFromPage } from "./player";
 import {
   hideIndicator,
   hideMemoInput,
+  injectChannelButton,
   injectChatButton,
   injectRecordButton,
+  removeChannelButton,
   removeChatButton,
   removeRecordButton,
   showIndicator,
@@ -24,6 +26,12 @@ import {
 } from "./ui";
 
 let pendingRecordId: string | null = null;
+
+function openSidePanel(): void {
+  chrome.runtime.sendMessage({ type: "OPEN_SIDE_PANEL" }).catch((error) => {
+    console.error("[Twitch Clip Todo] Failed to open side panel:", error);
+  });
+}
 
 async function handleRecord(): Promise<void> {
   const pageInfo = getCurrentPageInfo();
@@ -154,6 +162,7 @@ async function handlePageChange(pageInfo: PageInfo): Promise<void> {
   // Clean up UI
   removeRecordButton();
   removeChatButton();
+  removeChannelButton();
   hideIndicator();
   hideMemoInput();
 
@@ -186,10 +195,13 @@ async function handlePageChange(pageInfo: PageInfo): Promise<void> {
       }
     }
   } else if (pageInfo.type === "channel" && pageInfo.streamerId) {
-    // Show indicator on channel pages
+    // Show channel button and indicator on channel pages
     try {
       const count = await getPendingCount(pageInfo.streamerId);
       if (count > 0) {
+        // Inject button into channel header (next to follow button)
+        injectChannelButton(count, openSidePanel);
+        // Also show indicator as fallback (in case header injection fails)
         showIndicator(count);
       }
     } catch (error) {
