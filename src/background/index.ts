@@ -49,7 +49,25 @@ cleanupService.initialize();
 vodDiscoveryService.initialize();
 
 // Message handler
-chrome.runtime.onMessage.addListener((message: MessageToBackground, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message: MessageToBackground, sender, sendResponse) => {
+  // Handle OPEN_SIDE_PANEL directly (requires sender.tab for windowId)
+  if (message.type === "OPEN_SIDE_PANEL") {
+    if (sender.tab?.windowId) {
+      chrome.sidePanel
+        .open({ windowId: sender.tab.windowId })
+        .then(() => sendResponse({ success: true, data: null }))
+        .catch((error) =>
+          sendResponse({
+            success: false,
+            error: error instanceof Error ? error.message : "Failed to open side panel",
+          }),
+        );
+    } else {
+      sendResponse({ success: false, error: "No window ID available" });
+    }
+    return true;
+  }
+
   handleMessage(message, { recordService, linkingService, twitchService, vodDiscoveryService })
     .then(sendResponse)
     .catch((error) =>
