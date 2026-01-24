@@ -36,7 +36,7 @@ function openSidePanel(): void {
 async function handleRecord(): Promise<void> {
   const pageInfo = getCurrentPageInfo();
   if (pageInfo.type !== "live" && pageInfo.type !== "vod") {
-    showToast("Can only record on stream or VOD pages", "error");
+    showToast("現在は利用できません。チャンネルページから保存済みのTODOを確認できます。", "info");
     return;
   }
 
