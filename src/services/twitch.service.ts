@@ -1,3 +1,4 @@
+import type { ChromeStorageAPI } from "../infrastructure/chrome/types";
 import type {
   DeviceCodeResponse,
   TwitchApiClient,
@@ -16,6 +17,7 @@ import {
   type UsersEndpoint,
   type VideosEndpoint,
 } from "../infrastructure/twitch-api/endpoints";
+import { CACHE_TTL, STORAGE_KEYS } from "../shared/constants";
 
 export interface StreamerInfo {
   id: string;
@@ -29,7 +31,7 @@ export interface VodMetadata {
   streamerId: string;
   streamerName: string;
   title: string;
-  startedAt: Date;
+  startedAt: string; // ISO 8601
   durationSeconds: number;
   streamId: string | null;
 }
@@ -39,7 +41,7 @@ export interface LiveStreamInfo {
   userId: string;
   userLogin: string;
   userName: string;
-  startedAt: Date;
+  startedAt: string; // ISO 8601
   title: string;
   gameName: string;
 }
@@ -47,6 +49,7 @@ export interface LiveStreamInfo {
 export interface TwitchServiceDeps {
   auth: TwitchAuthAPI;
   client: TwitchApiClient;
+  storage: ChromeStorageAPI;
 }
 
 export interface TwitchService {
@@ -58,18 +61,68 @@ export interface TwitchService {
   getStreamerInfo(login: string): Promise<StreamerInfo | null>;
   getVodMetadata(vodId: string): Promise<VodMetadata | null>;
   getCurrentStream(login: string): Promise<LiveStreamInfo | null>;
+  // Cached versions
+  getCurrentStreamCached(login: string): Promise<LiveStreamInfo | null>;
+  invalidateStreamCache(login: string): Promise<void>;
+  // VOD discovery
+  getRecentVodsByUserId(userId: string, limit?: number): Promise<VodMetadata[]>;
+  findVodByStreamId(userId: string, streamId: string): Promise<VodMetadata | null>;
+}
+
+// Cache entry type
+interface CacheEntry<T> {
+  data: T;
+  expiresAt: number;
+}
+
+// Persistent cache types
+interface StreamCache {
+  [login: string]: CacheEntry<LiveStreamInfo | null>;
+}
+
+interface VodCache {
+  [userId: string]: CacheEntry<VodMetadata[]>;
 }
 
 export function createTwitchService(deps: TwitchServiceDeps): TwitchService {
-  const { auth, client } = deps;
+  const { auth, client, storage } = deps;
 
   const usersEndpoint: UsersEndpoint = createUsersEndpoint(client);
   const videosEndpoint: VideosEndpoint = createVideosEndpoint(client);
   const streamsEndpoint: StreamsEndpoint = createStreamsEndpoint(client);
 
-  // Simple in-memory cache for user info (cleared on service worker restart)
-  const userCache = new Map<string, { data: StreamerInfo; expiresAt: number }>();
-  const USER_CACHE_TTL = 60 * 60 * 1000; // 1 hour
+  // In-memory caches (fast, but cleared on service worker restart)
+  const userMemCache = new Map<string, CacheEntry<StreamerInfo>>();
+  const streamMemCache = new Map<string, CacheEntry<LiveStreamInfo | null>>();
+  const vodMemCache = new Map<string, CacheEntry<VodMetadata[]>>();
+
+  // Helper to get persistent stream cache
+  async function getPersistentStreamCache(): Promise<StreamCache> {
+    return (await storage.get<StreamCache>(STORAGE_KEYS.STREAM_CACHE)) ?? {};
+  }
+
+  async function updatePersistentStreamCache(
+    login: string,
+    entry: CacheEntry<LiveStreamInfo | null>,
+  ): Promise<void> {
+    const cache = await getPersistentStreamCache();
+    cache[login] = entry;
+    await storage.set(STORAGE_KEYS.STREAM_CACHE, cache);
+  }
+
+  // Helper to get persistent VOD cache
+  async function getPersistentVodCache(): Promise<VodCache> {
+    return (await storage.get<VodCache>(STORAGE_KEYS.VOD_CACHE)) ?? {};
+  }
+
+  async function updatePersistentVodCache(
+    userId: string,
+    entry: CacheEntry<VodMetadata[]>,
+  ): Promise<void> {
+    const cache = await getPersistentVodCache();
+    cache[userId] = entry;
+    await storage.set(STORAGE_KEYS.VOD_CACHE, cache);
+  }
 
   function mapUserToStreamerInfo(user: TwitchUser): StreamerInfo {
     return {
@@ -86,7 +139,7 @@ export function createTwitchService(deps: TwitchServiceDeps): TwitchService {
       streamerId: video.user_login,
       streamerName: video.user_name,
       title: video.title,
-      startedAt: new Date(video.created_at),
+      startedAt: video.created_at,
       durationSeconds: parseTwitchDuration(video.duration),
       streamId: video.stream_id,
     };
@@ -98,7 +151,7 @@ export function createTwitchService(deps: TwitchServiceDeps): TwitchService {
       userId: stream.user_id,
       userLogin: stream.user_login,
       userName: stream.user_name,
-      startedAt: new Date(stream.started_at),
+      startedAt: stream.started_at,
       title: stream.title,
       gameName: stream.game_name,
     };
@@ -132,8 +185,8 @@ export function createTwitchService(deps: TwitchServiceDeps): TwitchService {
     async getStreamerInfo(login: string): Promise<StreamerInfo | null> {
       const normalizedLogin = login.toLowerCase();
 
-      // Check cache
-      const cached = userCache.get(normalizedLogin);
+      // Check in-memory cache
+      const cached = userMemCache.get(normalizedLogin);
       if (cached && cached.expiresAt > Date.now()) {
         return cached.data;
       }
@@ -144,10 +197,10 @@ export function createTwitchService(deps: TwitchServiceDeps): TwitchService {
 
         const streamerInfo = mapUserToStreamerInfo(user);
 
-        // Update cache
-        userCache.set(normalizedLogin, {
+        // Update in-memory cache
+        userMemCache.set(normalizedLogin, {
           data: streamerInfo,
-          expiresAt: Date.now() + USER_CACHE_TTL,
+          expiresAt: Date.now() + CACHE_TTL.USER,
         });
 
         return streamerInfo;
@@ -175,6 +228,90 @@ export function createTwitchService(deps: TwitchServiceDeps): TwitchService {
       } catch {
         return null;
       }
+    },
+
+    async getCurrentStreamCached(login: string): Promise<LiveStreamInfo | null> {
+      const normalizedLogin = login.toLowerCase();
+
+      // Check in-memory cache first (fastest)
+      const memCached = streamMemCache.get(normalizedLogin);
+      if (memCached && memCached.expiresAt > Date.now()) {
+        return memCached.data;
+      }
+
+      // Check persistent cache (survives SW restart)
+      const persistentCache = await getPersistentStreamCache();
+      const cached = persistentCache[normalizedLogin];
+      if (cached && cached.expiresAt > Date.now()) {
+        // Hydrate memory cache
+        streamMemCache.set(normalizedLogin, cached);
+        return cached.data;
+      }
+
+      // Cache miss - fetch from API
+      const stream = await this.getCurrentStream(login);
+
+      // Update both caches
+      const entry: CacheEntry<LiveStreamInfo | null> = {
+        data: stream,
+        expiresAt: Date.now() + CACHE_TTL.STREAM,
+      };
+      streamMemCache.set(normalizedLogin, entry);
+      await updatePersistentStreamCache(normalizedLogin, entry);
+
+      return stream;
+    },
+
+    async invalidateStreamCache(login: string): Promise<void> {
+      const normalizedLogin = login.toLowerCase();
+
+      // Clear in-memory cache
+      streamMemCache.delete(normalizedLogin);
+
+      // Clear persistent cache
+      const cache = await getPersistentStreamCache();
+      delete cache[normalizedLogin];
+      await storage.set(STORAGE_KEYS.STREAM_CACHE, cache);
+    },
+
+    async getRecentVodsByUserId(userId: string, limit = 20): Promise<VodMetadata[]> {
+      // Check in-memory cache first
+      const memCached = vodMemCache.get(userId);
+      if (memCached && memCached.expiresAt > Date.now()) {
+        return memCached.data;
+      }
+
+      // Check persistent cache
+      const persistentCache = await getPersistentVodCache();
+      const cached = persistentCache[userId];
+      if (cached && cached.expiresAt > Date.now()) {
+        // Hydrate memory cache
+        vodMemCache.set(userId, cached);
+        return cached.data;
+      }
+
+      // Cache miss - fetch from API
+      try {
+        const videos = await videosEndpoint.getArchivesByUserId(userId, { first: limit });
+        const vods = videos.map(mapVideoToVodMetadata);
+
+        // Update both caches
+        const entry: CacheEntry<VodMetadata[]> = {
+          data: vods,
+          expiresAt: Date.now() + CACHE_TTL.VOD,
+        };
+        vodMemCache.set(userId, entry);
+        await updatePersistentVodCache(userId, entry);
+
+        return vods;
+      } catch {
+        return [];
+      }
+    },
+
+    async findVodByStreamId(userId: string, streamId: string): Promise<VodMetadata | null> {
+      const vods = await this.getRecentVodsByUserId(userId);
+      return vods.find((v) => v.streamId === streamId) ?? null;
     },
   };
 }

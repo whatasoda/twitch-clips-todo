@@ -1,12 +1,18 @@
 import { describe, expect, it } from "vitest";
 import { createRecord } from "../record";
-import { calculateVodOffset, linkRecordsToVod, matchRecordToVod } from "./vod-matcher";
+import {
+  calculateVodOffset,
+  linkRecordsByStreamId,
+  linkRecordsToVod,
+  matchRecordToVod,
+  matchRecordToVodByStreamId,
+} from "./vod-matcher";
 
 describe("matchRecordToVod", () => {
   const vod = {
     vodId: "123",
     streamerId: "streamer1",
-    startedAt: new Date("2024-01-01T10:00:00Z"),
+    startedAt: "2024-01-01T10:00:00Z",
     durationSeconds: 7200, // 2 hours
   };
 
@@ -89,7 +95,7 @@ describe("calculateVodOffset", () => {
       recordedAt: "2024-01-01T11:30:00Z",
     };
 
-    const offset = calculateVodOffset(record, new Date("2024-01-01T10:00:00Z"));
+    const offset = calculateVodOffset(record, "2024-01-01T10:00:00Z");
     expect(offset).toBe(5400); // 1.5 hours = 5400 seconds
   });
 
@@ -106,7 +112,7 @@ describe("calculateVodOffset", () => {
       recordedAt: "2024-01-01T09:00:00Z",
     };
 
-    const offset = calculateVodOffset(record, new Date("2024-01-01T10:00:00Z"));
+    const offset = calculateVodOffset(record, "2024-01-01T10:00:00Z");
     expect(offset).toBe(0);
   });
 });
@@ -115,7 +121,7 @@ describe("linkRecordsToVod", () => {
   const vod = {
     vodId: "123",
     streamerId: "streamer1",
-    startedAt: new Date("2024-01-01T10:00:00Z"),
+    startedAt: "2024-01-01T10:00:00Z",
     durationSeconds: 7200,
   };
 
@@ -160,5 +166,178 @@ describe("linkRecordsToVod", () => {
     expect(linked.length).toBe(2);
     expect(linked[0]?.vodOffset).toBe(3600); // 1 hour
     expect(linked[1]?.vodOffset).toBe(5400); // 1.5 hours
+  });
+});
+
+describe("matchRecordToVodByStreamId", () => {
+  const vod = {
+    vodId: "123",
+    streamerId: "streamer1",
+    streamId: "broadcast123",
+    startedAt: "2024-01-01T10:00:00Z",
+    durationSeconds: 7200,
+  };
+
+  it("matches record with matching broadcastId", () => {
+    const record = {
+      ...createRecord({
+        streamerId: "streamer1",
+        streamerName: "Streamer 1",
+        timestampSeconds: 3600,
+        sourceType: "live" as const,
+        vodId: null,
+        broadcastId: "broadcast123",
+      }),
+      recordedAt: "2024-01-01T11:00:00Z",
+    };
+
+    expect(matchRecordToVodByStreamId(record, vod)).toBe(true);
+  });
+
+  it("does not match record with different broadcastId", () => {
+    const record = {
+      ...createRecord({
+        streamerId: "streamer1",
+        streamerName: "Streamer 1",
+        timestampSeconds: 3600,
+        sourceType: "live" as const,
+        vodId: null,
+        broadcastId: "broadcast456",
+      }),
+      recordedAt: "2024-01-01T11:00:00Z",
+    };
+
+    expect(matchRecordToVodByStreamId(record, vod)).toBe(false);
+  });
+
+  it("does not match record with null broadcastId", () => {
+    const record = {
+      ...createRecord({
+        streamerId: "streamer1",
+        streamerName: "Streamer 1",
+        timestampSeconds: 3600,
+        sourceType: "live" as const,
+        vodId: null,
+        broadcastId: null,
+      }),
+      recordedAt: "2024-01-01T11:00:00Z",
+    };
+
+    expect(matchRecordToVodByStreamId(record, vod)).toBe(false);
+  });
+
+  it("does not match record from different streamer", () => {
+    const record = {
+      ...createRecord({
+        streamerId: "streamer2",
+        streamerName: "Streamer 2",
+        timestampSeconds: 3600,
+        sourceType: "live" as const,
+        vodId: null,
+        broadcastId: "broadcast123",
+      }),
+      recordedAt: "2024-01-01T11:00:00Z",
+    };
+
+    expect(matchRecordToVodByStreamId(record, vod)).toBe(false);
+  });
+
+  it("does not match VOD record", () => {
+    const record = {
+      ...createRecord({
+        streamerId: "streamer1",
+        streamerName: "Streamer 1",
+        timestampSeconds: 3600,
+        sourceType: "vod" as const,
+        vodId: "456",
+        broadcastId: "broadcast123",
+      }),
+      recordedAt: "2024-01-01T11:00:00Z",
+    };
+
+    expect(matchRecordToVodByStreamId(record, vod)).toBe(false);
+  });
+});
+
+describe("linkRecordsByStreamId", () => {
+  const vod = {
+    vodId: "123",
+    streamerId: "streamer1",
+    streamId: "broadcast123",
+    startedAt: "2024-01-01T10:00:00Z",
+    durationSeconds: 7200,
+  };
+
+  it("links records with matching broadcastId", () => {
+    const records = [
+      {
+        ...createRecord({
+          streamerId: "streamer1",
+          streamerName: "Streamer 1",
+          timestampSeconds: 0,
+          sourceType: "live" as const,
+          vodId: null,
+          broadcastId: "broadcast123",
+        }),
+        recordedAt: "2024-01-01T11:00:00Z",
+      },
+      {
+        ...createRecord({
+          streamerId: "streamer1",
+          streamerName: "Streamer 1",
+          timestampSeconds: 0,
+          sourceType: "live" as const,
+          vodId: null,
+          broadcastId: "broadcast123",
+        }),
+        recordedAt: "2024-01-01T11:30:00Z",
+      },
+      {
+        ...createRecord({
+          streamerId: "streamer1",
+          streamerName: "Streamer 1",
+          timestampSeconds: 0,
+          sourceType: "live" as const,
+          vodId: null,
+          broadcastId: "broadcast456", // Different broadcast
+        }),
+        recordedAt: "2024-01-01T11:00:00Z",
+      },
+      {
+        ...createRecord({
+          streamerId: "streamer1",
+          streamerName: "Streamer 1",
+          timestampSeconds: 0,
+          sourceType: "live" as const,
+          vodId: null,
+          broadcastId: null, // No broadcast ID
+        }),
+        recordedAt: "2024-01-01T11:00:00Z",
+      },
+    ];
+
+    const linked = linkRecordsByStreamId(records, vod);
+    expect(linked.length).toBe(2);
+    expect(linked[0]?.vodOffset).toBe(3600); // 1 hour
+    expect(linked[1]?.vodOffset).toBe(5400); // 1.5 hours
+  });
+
+  it("returns empty array when no records match", () => {
+    const records = [
+      {
+        ...createRecord({
+          streamerId: "streamer1",
+          streamerName: "Streamer 1",
+          timestampSeconds: 0,
+          sourceType: "live" as const,
+          vodId: null,
+          broadcastId: "broadcast456",
+        }),
+        recordedAt: "2024-01-01T11:00:00Z",
+      },
+    ];
+
+    const linked = linkRecordsByStreamId(records, vod);
+    expect(linked.length).toBe(0);
   });
 });
