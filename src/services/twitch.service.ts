@@ -8,11 +8,11 @@ import type {
   TwitchUser,
   TwitchVideo,
 } from "../infrastructure/twitch-api";
+import { parseTwitchDuration } from "../core/twitch/timestamp-parser";
 import {
   createStreamsEndpoint,
   createUsersEndpoint,
   createVideosEndpoint,
-  parseTwitchDuration,
   type StreamsEndpoint,
   type UsersEndpoint,
   type VideosEndpoint,

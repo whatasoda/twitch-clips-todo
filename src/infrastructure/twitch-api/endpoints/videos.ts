@@ -25,14 +25,6 @@ export interface VideosEndpoint {
   getArchivesByUserId(userId: string, options?: { first?: number }): Promise<TwitchVideo[]>;
 }
 
-// Parse Twitch duration format (e.g., "3h45m20s") to seconds
-export function parseTwitchDuration(duration: string): number {
-  const match = duration.match(/(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?/);
-  if (!match) return 0;
-  const [, h, m, s] = match;
-  return parseInt(h ?? "0", 10) * 3600 + parseInt(m ?? "0", 10) * 60 + parseInt(s ?? "0", 10);
-}
-
 export function createVideosEndpoint(client: TwitchApiClient): VideosEndpoint {
   return {
     async getById(id: string): Promise<TwitchVideo | null> {

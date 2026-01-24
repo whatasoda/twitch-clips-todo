@@ -1,3 +1,5 @@
+import { parseTimeString } from "../core/twitch/timestamp-parser";
+
 // Twitch player DOM selectors
 const SELECTORS = {
   // Live stream elapsed time (appears in the player controls)
@@ -8,25 +10,11 @@ const SELECTORS = {
   videoTime: ".video-player__default-player video",
 };
 
-// Parse time string like "1:30:45" to seconds
-function parseTimeDisplay(timeStr: string): number {
-  const parts = timeStr.split(":").map(Number);
-  if (parts.length === 3) {
-    const [hours, minutes, seconds] = parts;
-    return (hours ?? 0) * 3600 + (minutes ?? 0) * 60 + (seconds ?? 0);
-  }
-  if (parts.length === 2) {
-    const [minutes, seconds] = parts;
-    return (minutes ?? 0) * 60 + (seconds ?? 0);
-  }
-  return 0;
-}
-
 export function getPlayerTimestamp(): number | null {
   // Try to get from player UI
   const timeElement = document.querySelector(SELECTORS.liveTime);
   if (timeElement?.textContent) {
-    return parseTimeDisplay(timeElement.textContent);
+    return parseTimeString(timeElement.textContent);
   }
 
   // Fallback: try to get from video element
