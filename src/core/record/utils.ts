@@ -1,4 +1,5 @@
-import type { CreateRecordPayload, Record, RecordStore } from "./types";
+import type { CreateRecordPayload } from "../../shared/types";
+import type { Record, RecordStore } from "./types";
 
 export function generateId(): string {
   return crypto.randomUUID();

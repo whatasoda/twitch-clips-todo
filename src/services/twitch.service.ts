@@ -4,47 +4,28 @@ import type {
   TwitchApiClient,
   TwitchAuthAPI,
   TwitchAuthToken,
-  TwitchStream,
-  TwitchUser,
-  TwitchVideo,
 } from "../infrastructure/twitch-api";
 import {
   createStreamsEndpoint,
   createUsersEndpoint,
   createVideosEndpoint,
-  parseTwitchDuration,
   type StreamsEndpoint,
   type UsersEndpoint,
   type VideosEndpoint,
 } from "../infrastructure/twitch-api/endpoints";
 import { CACHE_TTL, STORAGE_KEYS } from "../shared/constants";
+import type { CacheEntry } from "./cache.service";
+import {
+  type LiveStreamInfo,
+  mapStreamToLiveStreamInfo,
+  mapUserToStreamerInfo,
+  mapVideoToVodMetadata,
+  type StreamerInfo,
+  type VodMetadata,
+} from "./twitch-mappers";
 
-export interface StreamerInfo {
-  id: string;
-  login: string;
-  displayName: string;
-  profileImageUrl: string | null;
-}
-
-export interface VodMetadata {
-  vodId: string;
-  streamerId: string;
-  streamerName: string;
-  title: string;
-  startedAt: string; // ISO 8601
-  durationSeconds: number;
-  streamId: string | null;
-}
-
-export interface LiveStreamInfo {
-  streamId: string;
-  userId: string;
-  userLogin: string;
-  userName: string;
-  startedAt: string; // ISO 8601
-  title: string;
-  gameName: string;
-}
+// Re-export types for external use
+export type { LiveStreamInfo, StreamerInfo, VodMetadata };
 
 export interface TwitchServiceDeps {
   auth: TwitchAuthAPI;
@@ -69,20 +50,9 @@ export interface TwitchService {
   findVodByStreamId(userId: string, streamId: string): Promise<VodMetadata | null>;
 }
 
-// Cache entry type
-interface CacheEntry<T> {
-  data: T;
-  expiresAt: number;
-}
-
-// Persistent cache types
-interface StreamCache {
-  [login: string]: CacheEntry<LiveStreamInfo | null>;
-}
-
-interface VodCache {
-  [userId: string]: CacheEntry<VodMetadata[]>;
-}
+// Persistent cache types using CacheEntry from cache.service
+type StreamCache = Record<string, CacheEntry<LiveStreamInfo | null>>;
+type VodCache = Record<string, CacheEntry<VodMetadata[]>>;
 
 export function createTwitchService(deps: TwitchServiceDeps): TwitchService {
   const { auth, client, storage } = deps;
@@ -122,39 +92,6 @@ export function createTwitchService(deps: TwitchServiceDeps): TwitchService {
     const cache = await getPersistentVodCache();
     cache[userId] = entry;
     await storage.set(STORAGE_KEYS.VOD_CACHE, cache);
-  }
-
-  function mapUserToStreamerInfo(user: TwitchUser): StreamerInfo {
-    return {
-      id: user.id,
-      login: user.login,
-      displayName: user.display_name,
-      profileImageUrl: user.profile_image_url || null,
-    };
-  }
-
-  function mapVideoToVodMetadata(video: TwitchVideo): VodMetadata {
-    return {
-      vodId: video.id,
-      streamerId: video.user_login,
-      streamerName: video.user_name,
-      title: video.title,
-      startedAt: video.created_at,
-      durationSeconds: parseTwitchDuration(video.duration),
-      streamId: video.stream_id,
-    };
-  }
-
-  function mapStreamToLiveStreamInfo(stream: TwitchStream): LiveStreamInfo {
-    return {
-      streamId: stream.id,
-      userId: stream.user_id,
-      userLogin: stream.user_login,
-      userName: stream.user_name,
-      startedAt: stream.started_at,
-      title: stream.title,
-      gameName: stream.game_name,
-    };
   }
 
   return {

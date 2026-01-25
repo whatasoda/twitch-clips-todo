@@ -17,12 +17,3 @@ export interface RecordStore {
   version: number;
   records: Record[];
 }
-
-export interface CreateRecordPayload {
-  streamerId: string;
-  streamerName: string;
-  timestampSeconds: number;
-  sourceType: "live" | "vod";
-  vodId: string | null;
-  broadcastId: string | null;
-}

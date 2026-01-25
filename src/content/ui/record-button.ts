@@ -1,3 +1,4 @@
+import { createShadowHost } from "./shadow-dom";
 import { BOOKMARK_ICON_OUTLINED, styles } from "./styles";
 
 let buttonElement: HTMLElement | null = null;
@@ -5,9 +6,7 @@ let retryTimeoutId: number | null = null;
 let observer: MutationObserver | null = null;
 
 function createRecordButton(onClick: () => void): HTMLElement {
-  const host = document.createElement("div");
-  host.id = "twitch-clips-todo-button";
-  const shadowRoot = host.attachShadow({ mode: "closed" });
+  const { host, shadow } = createShadowHost("twitch-clips-todo-button");
 
   const button = document.createElement("button");
   button.setAttribute("style", styles.playerButton.base);
@@ -30,7 +29,7 @@ function createRecordButton(onClick: () => void): HTMLElement {
     onClick();
   });
 
-  shadowRoot.appendChild(button);
+  shadow.appendChild(button);
 
   return host;
 }
@@ -68,7 +67,7 @@ function tryInjectNextToClipButton(buttonHost: HTMLElement): boolean {
 
     // Find a suitable container that we can insert before
     // Twitch typically wraps buttons in div containers
-    while (wrapper && wrapper.parentElement) {
+    while (wrapper?.parentElement) {
       const parent = wrapper.parentElement;
       // Check if parent contains other button elements (indicating it's the button row)
       if (parent.children.length > 1) {
@@ -93,7 +92,7 @@ function injectIntoPlayerControls(buttonHost: HTMLElement): boolean {
     const rightControls = controlsBar.querySelector(
       '[class*="player-controls__right-control-group"]',
     );
-    if (rightControls && rightControls.firstChild) {
+    if (rightControls?.firstChild) {
       rightControls.insertBefore(buttonHost, rightControls.firstChild);
       return true;
     }
