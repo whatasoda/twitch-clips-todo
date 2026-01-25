@@ -5,6 +5,11 @@ export const BOOKMARK_ICON_OUTLINED = `<svg width="20" height="20" viewBox="0 0 
   <path d="M5 3h10a1 1 0 0 1 1 1v14l-6-3.5-6 3.5V4a1 1 0 0 1 1-1z"/>
 </svg>`;
 
+// Retry icon for error state
+export const RETRY_ICON = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+</svg>`;
+
 // Inline styles for content script UI (Shadow DOM)
 // Uses Panda CSS tokens for consistent color values
 export const styles = {

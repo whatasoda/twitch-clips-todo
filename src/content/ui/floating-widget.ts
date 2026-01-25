@@ -9,7 +9,7 @@ import {
   type PositionPersistence,
 } from "../behaviors";
 import { createShadowHost, injectStyles } from "./shadow-dom";
-import { BOOKMARK_ICON_OUTLINED } from "./styles";
+import { BOOKMARK_ICON_OUTLINED, RETRY_ICON } from "./styles";
 import { getWidgetStyles } from "./widget.styles";
 
 const STORAGE_KEY = "twitch-clip-todo-widget-position";
@@ -71,6 +71,29 @@ class FloatingWidgetManager {
     this.eventManager = null;
     this.draggable = null;
     this.autoHide = null;
+  }
+
+  showError(onRetry: () => void): void {
+    // Clean up existing widget
+    this.hide();
+
+    this.eventManager = createEventManager();
+
+    const widget = this.createErrorWidget();
+    this.host = widget;
+
+    // Set initial position
+    const pos = this.positionPersistence.load();
+    widget.style.cssText = `
+      position: fixed;
+      left: ${pos.x}px;
+      top: ${pos.y}px;
+      z-index: 10000;
+    `;
+
+    document.body.appendChild(widget);
+
+    this.setupErrorBehaviors(onRetry);
   }
 
   updateCount(count: number): void {
@@ -181,6 +204,79 @@ class FloatingWidgetManager {
       this.eventManager,
     );
   }
+
+  private createErrorWidget(): HTMLElement {
+    const { host, shadow } = createShadowHost("twitch-clip-todo-floating-widget");
+    this.shadow = shadow;
+
+    injectStyles(shadow, getWidgetStyles());
+
+    const button = document.createElement("button");
+    button.className = "widget error";
+    button.setAttribute("aria-label", "Connection error - Click to retry");
+    button.title = "接続エラー\n拡張機能アイコンをクリック";
+    button.innerHTML = `
+      <span class="icon">${RETRY_ICON}</span>
+      <span class="error-badge">!</span>
+    `;
+
+    shadow.appendChild(button);
+
+    return host;
+  }
+
+  private setupErrorBehaviors(onRetry: () => void): void {
+    if (!this.host || !this.shadow || !this.eventManager) return;
+
+    const button = this.shadow.querySelector("button");
+    if (!button) return;
+
+    // Setup draggable behavior with retry on click
+    this.draggable = createDraggable(
+      {
+        element: this.host,
+        handle: button,
+        threshold: 3,
+        bounds: () => ({ width: window.innerWidth, height: window.innerHeight }),
+        onDragStart: () => {
+          button.classList.add("dragging");
+          this.autoHide?.reset();
+        },
+        onDragEnd: () => {
+          button.classList.remove("dragging");
+          if (this.host) {
+            this.positionPersistence.save(this.host.getBoundingClientRect());
+          }
+        },
+        onDragCancel: () => {
+          button.classList.remove("dragging");
+        },
+        onClick: () => {
+          onRetry();
+        },
+      },
+      this.eventManager,
+    );
+
+    // Setup auto-hide behavior
+    this.autoHide = createAutoHide(
+      {
+        delay: HIDE_DELAY_MS,
+        isDragging: () => this.draggable?.isDragging ?? false,
+        onHideStart: () => {
+          button.classList.add("hiding");
+        },
+        onHidden: () => {
+          button.classList.remove("hiding");
+          button.classList.add("hidden");
+        },
+        onShow: () => {
+          button.classList.remove("hidden", "hiding");
+        },
+      },
+      this.eventManager,
+    );
+  }
 }
 
 // Singleton instance
@@ -197,4 +293,8 @@ export function hideFloatingWidget(): void {
 
 export function updateFloatingWidgetCount(count: number): void {
   widgetManager.updateCount(count);
+}
+
+export function showFloatingWidgetError(onRetry: () => void): void {
+  widgetManager.showError(onRetry);
 }
