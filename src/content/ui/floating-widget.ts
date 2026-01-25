@@ -96,36 +96,6 @@ class FloatingWidgetManager {
     this.setupErrorBehaviors(onRetry);
   }
 
-  updateCount(count: number): void {
-    if (!this.shadow) return;
-
-    const button = this.shadow.querySelector("button");
-    if (!button) return;
-
-    // Find existing badge
-    const existingBadge = button.querySelector(".badge");
-
-    if (count > 0) {
-      if (existingBadge) {
-        existingBadge.textContent = String(count);
-      } else {
-        const badge = document.createElement("span");
-        badge.className = "badge";
-        badge.textContent = String(count);
-        button.appendChild(badge);
-      }
-    } else {
-      existingBadge?.remove();
-    }
-
-    button.setAttribute(
-      "aria-label",
-      count > 0
-        ? `${count} pending clips - Click to open popup`
-        : "Clip Todo - Click to open popup",
-    );
-  }
-
   private createWidget(count: number): HTMLElement {
     const { host, shadow } = createShadowHost("twitch-clip-todo-floating-widget");
     this.shadow = shadow;
