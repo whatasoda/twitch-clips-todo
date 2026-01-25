@@ -86,5 +86,27 @@ export function getWidgetStyles(): string {
   font-size: 12px;
   font-weight: bold;
 }
+
+.widget.error {
+  background: ${token("colors.error")};
+}
+
+.widget.error:hover {
+  filter: brightness(1.1);
+}
+
+.widget .error-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: white;
+  color: ${token("colors.error")};
+  font-size: 12px;
+  font-weight: bold;
+}
 `;
 }

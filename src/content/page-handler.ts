@@ -8,8 +8,8 @@ import {
   removeChatButton,
   removeRecordButton,
   showFloatingWidget,
+  showFloatingWidgetError,
   showToast,
-  updateFloatingWidgetCount,
 } from "./ui";
 
 export interface PageHandlerDeps {
@@ -52,8 +52,19 @@ export function createPageHandler(deps: PageHandlerDeps) {
 
           // Show floating widget for VOD using API-fetched streamerId
           if (apiVodMeta?.streamerId) {
-            const count = await getPendingCount(apiVodMeta.streamerId);
-            showFloatingWidget(count, onOpenPopup);
+            const streamerId = apiVodMeta.streamerId;
+
+            const tryShowVodWidget = async (): Promise<void> => {
+              try {
+                const count = await getPendingCount(streamerId);
+                showFloatingWidget(count, onOpenPopup);
+              } catch (err) {
+                console.error("[Twitch Clip Todo] Failed to get pending count for VOD:", err);
+                showFloatingWidgetError(tryShowVodWidget);
+              }
+            };
+
+            tryShowVodWidget();
           }
         } catch (error) {
           console.error("[Twitch Clip Todo] VOD linking failed:", error);
@@ -63,24 +74,36 @@ export function createPageHandler(deps: PageHandlerDeps) {
 
     // Show floating widget for non-VOD pages (live, channel)
     if (pageInfo.type !== "vod" && pageInfo.streamerId) {
-      try {
-        const count = await getPendingCount(pageInfo.streamerId);
-        showFloatingWidget(count, onOpenPopup);
-      } catch (error) {
-        console.error("[Twitch Clip Todo] Failed to get pending count:", error);
-      }
+      const streamerId = pageInfo.streamerId;
+
+      const tryShowWidget = async (): Promise<void> => {
+        try {
+          const count = await getPendingCount(streamerId);
+          showFloatingWidget(count, onOpenPopup);
+        } catch (error) {
+          console.error("[Twitch Clip Todo] Failed to get pending count:", error);
+          showFloatingWidgetError(tryShowWidget);
+        }
+      };
+
+      tryShowWidget();
     }
   }
 
   async function refreshFloatingWidget(streamerId: string | undefined): Promise<void> {
     if (!streamerId) return;
 
-    try {
-      const count = await getPendingCount(streamerId);
-      updateFloatingWidgetCount(count);
-    } catch (error) {
-      console.error("[Twitch Clip Todo] Failed to refresh floating widget:", error);
-    }
+    const tryRefresh = async (): Promise<void> => {
+      try {
+        const count = await getPendingCount(streamerId);
+        showFloatingWidget(count, onOpenPopup);
+      } catch (error) {
+        console.error("[Twitch Clip Todo] Failed to refresh floating widget:", error);
+        showFloatingWidgetError(tryRefresh);
+      }
+    };
+
+    tryRefresh();
   }
 
   return { handlePageChange, refreshFloatingWidget };

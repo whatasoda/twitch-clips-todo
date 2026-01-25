@@ -9,7 +9,7 @@ import {
   type PositionPersistence,
 } from "../behaviors";
 import { createShadowHost, injectStyles } from "./shadow-dom";
-import { BOOKMARK_ICON_OUTLINED } from "./styles";
+import { BOOKMARK_ICON_OUTLINED, RETRY_ICON } from "./styles";
 import { getWidgetStyles } from "./widget.styles";
 
 const STORAGE_KEY = "twitch-clip-todo-widget-position";
@@ -73,34 +73,27 @@ class FloatingWidgetManager {
     this.autoHide = null;
   }
 
-  updateCount(count: number): void {
-    if (!this.shadow) return;
+  showError(onRetry: () => void): void {
+    // Clean up existing widget
+    this.hide();
 
-    const button = this.shadow.querySelector("button");
-    if (!button) return;
+    this.eventManager = createEventManager();
 
-    // Find existing badge
-    const existingBadge = button.querySelector(".badge");
+    const widget = this.createErrorWidget();
+    this.host = widget;
 
-    if (count > 0) {
-      if (existingBadge) {
-        existingBadge.textContent = String(count);
-      } else {
-        const badge = document.createElement("span");
-        badge.className = "badge";
-        badge.textContent = String(count);
-        button.appendChild(badge);
-      }
-    } else {
-      existingBadge?.remove();
-    }
+    // Set initial position
+    const pos = this.positionPersistence.load();
+    widget.style.cssText = `
+      position: fixed;
+      left: ${pos.x}px;
+      top: ${pos.y}px;
+      z-index: 10000;
+    `;
 
-    button.setAttribute(
-      "aria-label",
-      count > 0
-        ? `${count} pending clips - Click to open popup`
-        : "Clip Todo - Click to open popup",
-    );
+    document.body.appendChild(widget);
+
+    this.setupErrorBehaviors(onRetry);
   }
 
   private createWidget(count: number): HTMLElement {
@@ -130,6 +123,10 @@ class FloatingWidgetManager {
   }
 
   private setupBehaviors(): void {
+    this.setupCommonBehaviors(() => this.onClick?.());
+  }
+
+  private setupCommonBehaviors(onClick: () => void): void {
     if (!this.host || !this.shadow || !this.eventManager) return;
 
     const button = this.shadow.querySelector("button");
@@ -144,6 +141,7 @@ class FloatingWidgetManager {
         bounds: () => ({ width: window.innerWidth, height: window.innerHeight }),
         onDragStart: () => {
           button.classList.add("dragging");
+          this.autoHide?.reset();
         },
         onDragEnd: () => {
           button.classList.remove("dragging");
@@ -154,9 +152,7 @@ class FloatingWidgetManager {
         onDragCancel: () => {
           button.classList.remove("dragging");
         },
-        onClick: () => {
-          this.onClick?.();
-        },
+        onClick,
       },
       this.eventManager,
     );
@@ -180,6 +176,30 @@ class FloatingWidgetManager {
       this.eventManager,
     );
   }
+
+  private createErrorWidget(): HTMLElement {
+    const { host, shadow } = createShadowHost("twitch-clip-todo-floating-widget");
+    this.shadow = shadow;
+
+    injectStyles(shadow, getWidgetStyles());
+
+    const button = document.createElement("button");
+    button.className = "widget error";
+    button.setAttribute("aria-label", "Connection error - Click to retry");
+    button.title = "接続エラー\n拡張機能アイコンをクリック";
+    button.innerHTML = `
+      <span class="icon">${RETRY_ICON}</span>
+      <span class="error-badge">!</span>
+    `;
+
+    shadow.appendChild(button);
+
+    return host;
+  }
+
+  private setupErrorBehaviors(onRetry: () => void): void {
+    this.setupCommonBehaviors(onRetry);
+  }
 }
 
 // Singleton instance
@@ -194,6 +214,6 @@ export function hideFloatingWidget(): void {
   widgetManager.hide();
 }
 
-export function updateFloatingWidgetCount(count: number): void {
-  widgetManager.updateCount(count);
+export function showFloatingWidgetError(onRetry: () => void): void {
+  widgetManager.showError(onRetry);
 }
