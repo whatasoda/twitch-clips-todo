@@ -151,6 +151,9 @@ class FloatingWidgetManager {
             this.positionPersistence.save(this.host.getBoundingClientRect());
           }
         },
+        onDragCancel: () => {
+          button.classList.remove("dragging");
+        },
         onClick: () => {
           this.onClick?.();
         },

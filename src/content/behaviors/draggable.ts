@@ -7,6 +7,7 @@ export interface DraggableOptions {
   bounds?: { width: number; height: number } | (() => { width: number; height: number });
   onDragStart?: () => void;
   onDragEnd?: (position: { x: number; y: number }) => void;
+  onDragCancel?: () => void;
   onClick?: () => void;
 }
 
@@ -27,7 +28,16 @@ export function createDraggable(
   options: DraggableOptions,
   eventManager: EventManager,
 ): DraggableBehavior {
-  const { element, handle, threshold = 3, bounds, onDragStart, onDragEnd, onClick } = options;
+  const {
+    element,
+    handle,
+    threshold = 3,
+    bounds,
+    onDragStart,
+    onDragEnd,
+    onDragCancel,
+    onClick,
+  } = options;
 
   const dragHandle = handle ?? element;
 
@@ -85,6 +95,8 @@ export function createDraggable(
       if (state.didDrag) {
         const rect = element.getBoundingClientRect();
         onDragEnd?.({ x: rect.left, y: rect.top });
+      } else {
+        onDragCancel?.();
       }
     }
   }
