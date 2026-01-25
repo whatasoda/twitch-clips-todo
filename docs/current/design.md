@@ -68,7 +68,6 @@ Infrastructure Layer (Chrome API Abstraction)
 │   │   ├── player.ts            # Player interaction
 │   │   └── /ui                  # Content Script UI
 │   │       ├── shadow-dom.ts    # Shadow DOM factory
-│   │       ├── injection.ts     # Element injection utility
 │   │       ├── record-button.ts
 │   │       ├── chat-button.ts
 │   │       ├── floating-widget.ts
