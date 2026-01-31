@@ -7,6 +7,8 @@ import { AuthButton } from "./AuthButton";
 
 interface HeaderProps {
   pageInfo: PageInfo;
+  showAuth?: boolean;
+  onHelpClick?: () => void;
 }
 
 export function Header(props: HeaderProps) {
@@ -33,7 +35,7 @@ export function Header(props: HeaderProps) {
             </Badge>
           )}
         </HStack>
-        <AuthButton />
+        {props.showAuth !== false && <AuthButton />}
       </Flex>
     </Box>
   );
