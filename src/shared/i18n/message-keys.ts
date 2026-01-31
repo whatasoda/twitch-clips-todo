@@ -82,6 +82,9 @@ export const MSG = {
   ONBOARDING_RETENTION_NOTICE: "onboarding_retentionNotice",
   ONBOARDING_TWITCH_TOAST: "onboarding_twitchToast",
 
+  // Cleanup
+  CLEANUP_BANNER_MESSAGE: "cleanup_bannerMessage",
+
   // Help
   HELP_TITLE: "help_title",
   HELP_SHORTCUT: "help_shortcut",

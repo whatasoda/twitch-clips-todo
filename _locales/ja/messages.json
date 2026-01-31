@@ -251,6 +251,13 @@
     "message": "「後でクリップ」ボタンを追加しました。Alt+Shift+C でも記録できます。",
     "description": "Twitch初回訪問時のトースト"
   },
+  "cleanup_bannerMessage": {
+    "message": "$1 件の古いレコードが自動削除されました",
+    "description": "自動クリーンアップ後に表示されるバナーメッセージ",
+    "placeholders": {
+      "count": { "content": "$1" }
+    }
+  },
   "help_title": {
     "message": "ヒントと情報",
     "description": "ヘルプパネルのタイトル"

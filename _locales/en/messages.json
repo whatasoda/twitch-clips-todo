@@ -251,6 +251,13 @@
     "message": "Clip Later button added. You can also press Alt+Shift+C.",
     "description": "Toast on first Twitch visit"
   },
+  "cleanup_bannerMessage": {
+    "message": "$1 old record(s) were automatically cleaned up",
+    "description": "Banner message shown after automatic cleanup",
+    "placeholders": {
+      "count": { "content": "$1" }
+    }
+  },
   "help_title": {
     "message": "Tips & Info",
     "description": "Help panel title"
