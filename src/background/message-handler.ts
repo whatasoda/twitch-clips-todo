@@ -112,6 +112,19 @@ export async function handleMessage(
         return { success: true, data: result };
       }
 
+      case "GET_RECENT_VODS": {
+        if (!twitchService) {
+          return { success: true, data: [] };
+        }
+        const { streamerId } = message.payload as { streamerId: string };
+        const streamerInfo = await twitchService.getStreamerInfo(streamerId);
+        if (!streamerInfo) {
+          return { success: true, data: [] };
+        }
+        const vods = await twitchService.getRecentVodsByUserId(streamerInfo.id);
+        return { success: true, data: vods };
+      }
+
       case "CREATE_RECORD": {
         const record = await recordService.create(message.payload as CreateRecordPayload);
         return { success: true, data: record };

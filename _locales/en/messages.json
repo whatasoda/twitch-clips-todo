@@ -117,6 +117,14 @@
     "message": "No broadcast ID",
     "description": "No broadcast ID badge"
   },
+  "record_selectVod": {
+    "message": "Select VOD",
+    "description": "Button to select a VOD for clip creation"
+  },
+  "record_noVodsAvailable": {
+    "message": "No VODs available",
+    "description": "Message when no VODs are found for the streamer"
+  },
   "record_deleteLabel": {
     "message": "Delete record",
     "description": "Delete button aria-label"

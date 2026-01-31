@@ -117,6 +117,14 @@
     "message": "配信IDなし",
     "description": "配信IDがない場合のバッジ"
   },
+  "record_selectVod": {
+    "message": "VODを選択",
+    "description": "VODを選んでクリップ作成するボタン"
+  },
+  "record_noVodsAvailable": {
+    "message": "VODがありません",
+    "description": "配信者のVODが見つからない場合のメッセージ"
+  },
   "record_deleteLabel": {
     "message": "記録を削除",
     "description": "削除ボタンのaria-label"

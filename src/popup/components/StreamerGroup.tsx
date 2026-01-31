@@ -6,6 +6,7 @@ import { t } from "@/shared/i18n";
 import { MSG } from "@/shared/i18n/message-keys";
 import { Box, Flex, HStack } from "../../../styled-system/jsx";
 import type { Record } from "../../core/record";
+import type { VodMetadata } from "../../services/twitch.service";
 import { RecordItem } from "./RecordItem";
 
 interface StreamerGroupProps {
@@ -16,6 +17,8 @@ interface StreamerGroupProps {
   onDelete: (id: string) => Promise<unknown>;
   onOpenClip: (record: Record) => Promise<unknown>;
   onFindVod: (streamerId: string) => Promise<unknown>;
+  onGetRecentVods: (streamerId: string) => Promise<VodMetadata[]>;
+  onSelectVod: (record: Record, vodId: string, offsetSeconds: number) => Promise<void>;
 }
 
 export function StreamerGroup(props: StreamerGroupProps) {
@@ -74,6 +77,8 @@ export function StreamerGroup(props: StreamerGroupProps) {
               onDelete={props.onDelete}
               onOpenClip={props.onOpenClip}
               onFindVod={props.onFindVod}
+              onGetRecentVods={props.onGetRecentVods}
+              onSelectVod={props.onSelectVod}
             />
           )}
         </For>

@@ -41,6 +41,8 @@ export const MSG = {
   RECORD_FIND_VOD: "record_findVod",
   RECORD_FIND_VODS: "record_findVods",
   RECORD_NO_BROADCAST_ID: "record_noBroadcastId",
+  RECORD_SELECT_VOD: "record_selectVod",
+  RECORD_NO_VODS_AVAILABLE: "record_noVodsAvailable",
   RECORD_DELETE_LABEL: "record_deleteLabel",
   RECORD_ADD_MEMO_PLACEHOLDER: "record_addMemoPlaceholder",
   RECORD_ENTER_MEMO_PLACEHOLDER: "record_enterMemoPlaceholder",

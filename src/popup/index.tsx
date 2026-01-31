@@ -9,7 +9,14 @@ import { useCurrentTab, useRecordActions, useRecords } from "./hooks";
 export default function App() {
   const { records, error } = useRecords();
   const { pageInfo } = useCurrentTab();
-  const { updateMemo, deleteRecord, openClipCreation, discoverVodForStreamer } = useRecordActions();
+  const {
+    updateMemo,
+    deleteRecord,
+    openClipCreation,
+    discoverVodForStreamer,
+    getRecentVods,
+    openClipForVod,
+  } = useRecordActions();
   const [activeTab, setActiveTab] = createSignal<TabValue>("pending");
 
   const pendingCount = createMemo(
@@ -52,6 +59,8 @@ export default function App() {
                 onDelete={deleteRecord}
                 onOpenClip={openClipCreation}
                 onFindVod={discoverVodForStreamer}
+                onGetRecentVods={getRecentVods}
+                onSelectVod={openClipForVod}
               />
             </>
           )}

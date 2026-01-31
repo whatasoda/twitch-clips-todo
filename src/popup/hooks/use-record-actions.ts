@@ -1,5 +1,6 @@
 import type { Record } from "../../core/record";
 import { buildClipCreationUrl } from "../../core/twitch";
+import type { VodMetadata } from "../../services/twitch.service";
 import type { DiscoveryResult } from "../../services/vod-discovery.service";
 import { sendMessage } from "../../shared/messaging";
 
@@ -39,11 +40,34 @@ export function useRecordActions() {
     });
   }
 
+  async function getRecentVods(streamerId: string): Promise<VodMetadata[]> {
+    return sendMessage<VodMetadata[]>({
+      type: "GET_RECENT_VODS",
+      payload: { streamerId },
+    });
+  }
+
+  async function openClipForVod(
+    record: Record,
+    vodId: string,
+    offsetSeconds: number,
+  ): Promise<void> {
+    const url = buildClipCreationUrl({
+      vodId,
+      broadcasterLogin: record.streamerId,
+      offsetSeconds,
+    });
+    await chrome.tabs.create({ url });
+    // Do NOT mark as completed — user selected VOD manually, clip success is uncertain
+  }
+
   return {
     updateMemo,
     markCompleted,
     deleteRecord,
     openClipCreation,
     discoverVodForStreamer,
+    getRecentVods,
+    openClipForVod,
   };
 }
