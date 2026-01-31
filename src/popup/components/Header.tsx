@@ -39,7 +39,12 @@ export function Header(props: HeaderProps) {
         </HStack>
         <HStack gap="1">
           {props.onHelpClick && (
-            <IconButton size="xs" variant="ghost" aria-label={t(MSG.HELP_BUTTON_LABEL)} onClick={props.onHelpClick}>
+            <IconButton
+              size="xs"
+              variant="ghost"
+              aria-label={t(MSG.HELP_BUTTON_LABEL)}
+              onClick={props.onHelpClick}
+            >
               <Info size={16} />
             </IconButton>
           )}

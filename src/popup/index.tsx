@@ -9,9 +9,9 @@ import { FirstRecordHint } from "./components/FirstRecordHint";
 import { HelpPanel } from "./components/HelpPanel";
 import { TabSwitcher, type TabValue } from "./components/TabSwitcher";
 import { WelcomeCard } from "./components/WelcomeCard";
+import { useCurrentTab, useRecordActions, useRecords } from "./hooks";
 import { useAuth } from "./hooks/use-auth";
 import { useOnboarding } from "./hooks/use-onboarding";
-import { useCurrentTab, useRecordActions, useRecords } from "./hooks";
 
 export default function App() {
   const { records, error } = useRecords();
@@ -40,7 +40,11 @@ export default function App() {
 
   return (
     <Box minH="100vh" bg="bg.canvas" color="fg.default" position="relative">
-      <Header pageInfo={pageInfo()} showAuth={isAuthenticated()} onHelpClick={() => setShowHelp(true)} />
+      <Header
+        pageInfo={pageInfo()}
+        showAuth={isAuthenticated()}
+        onHelpClick={() => setShowHelp(true)}
+      />
 
       <Show when={showHelp()}>
         <HelpPanel onClose={() => setShowHelp(false)} />
@@ -52,10 +56,7 @@ export default function App() {
         </Box>
       </Show>
 
-      <Show
-        when={isAuthenticated()}
-        fallback={<WelcomeCard />}
-      >
+      <Show when={isAuthenticated()} fallback={<WelcomeCard />}>
         <Suspense
           fallback={
             <Center py="8">

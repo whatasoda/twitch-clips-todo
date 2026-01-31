@@ -1,7 +1,13 @@
 import { t } from "@/shared/i18n";
 import { MSG } from "@/shared/i18n/message-keys";
 import type { PageInfo } from "../core/twitch";
-import { getOnboardingState, getPendingCount, getVodMetadataFromApi, linkVod, updateOnboardingState } from "./messaging";
+import {
+  getOnboardingState,
+  getPendingCount,
+  getVodMetadataFromApi,
+  linkVod,
+  updateOnboardingState,
+} from "./messaging";
 import {
   hideFloatingWidget,
   hideMemoInput,

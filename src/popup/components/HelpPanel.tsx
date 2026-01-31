@@ -1,4 +1,4 @@
-import { Keyboard, MessageSquare, Clock, Link, X } from "lucide-solid";
+import { Clock, Keyboard, Link, MessageSquare, X } from "lucide-solid";
 import { For } from "solid-js";
 import { IconButton } from "@/components/ui/icon-button";
 import { t } from "@/shared/i18n";
@@ -18,19 +18,18 @@ const helpItems = [
 
 export function HelpPanel(props: HelpPanelProps) {
   return (
-    <Box
-      position="absolute"
-      inset="0"
-      bg="bg.canvas"
-      zIndex="50"
-      overflow="auto"
-    >
+    <Box position="absolute" inset="0" bg="bg.canvas" zIndex="50" overflow="auto">
       <Box p="4" borderBottomWidth="1px" borderColor="border.default" bg="bg.muted">
         <Flex alignItems="center" justifyContent="space-between">
           <Box fontWeight="semibold" fontSize="lg">
             {t(MSG.HELP_TITLE)}
           </Box>
-          <IconButton size="sm" variant="ghost" aria-label={t(MSG.HELP_CLOSE)} onClick={props.onClose}>
+          <IconButton
+            size="sm"
+            variant="ghost"
+            aria-label={t(MSG.HELP_CLOSE)}
+            onClick={props.onClose}
+          >
             <X size={16} />
           </IconButton>
         </Flex>
@@ -41,7 +40,11 @@ export function HelpPanel(props: HelpPanelProps) {
           {(item) => (
             <Box px="4" py="3" borderBottomWidth="1px" borderColor="border.default">
               <HStack gap="3" alignItems="flex-start">
-                <item.icon size={16} color="var(--colors-fg-muted)" style={{ "flex-shrink": "0", "margin-top": "2px" }} />
+                <item.icon
+                  size={16}
+                  color="var(--colors-fg-muted)"
+                  style={{ "flex-shrink": "0", "margin-top": "2px" }}
+                />
                 <Box fontSize="sm">{t(item.key)}</Box>
               </HStack>
             </Box>

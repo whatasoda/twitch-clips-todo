@@ -64,7 +64,13 @@ chrome.runtime.onMessage.addListener((message: MessageToBackground, _sender, sen
     return true;
   }
 
-  handleMessage(message, { recordService, linkingService, twitchService, vodDiscoveryService, storage: chromeAPI.storage })
+  handleMessage(message, {
+    recordService,
+    linkingService,
+    twitchService,
+    vodDiscoveryService,
+    storage: chromeAPI.storage,
+  })
     .then(sendResponse)
     .catch((error) =>
       sendResponse({
