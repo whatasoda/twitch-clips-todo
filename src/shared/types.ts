@@ -7,6 +7,7 @@ export interface CreateRecordPayload {
   sourceType: "live" | "vod";
   vodId: string | null;
   broadcastId: string | null;
+  memo?: string;
 }
 
 export interface LinkVodPayload {

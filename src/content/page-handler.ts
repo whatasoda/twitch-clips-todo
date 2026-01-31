@@ -17,12 +17,15 @@ import {
 export interface PageHandlerDeps {
   onRecord: () => Promise<void>;
   onOpenPopup: () => void;
+  onPageChange?: () => void;
 }
 
 export function createPageHandler(deps: PageHandlerDeps) {
-  const { onRecord, onOpenPopup } = deps;
+  const { onRecord, onOpenPopup, onPageChange } = deps;
 
   async function handlePageChange(pageInfo: PageInfo): Promise<void> {
+    onPageChange?.();
+
     // Clean up UI
     removeRecordButton();
     removeChatButton();
