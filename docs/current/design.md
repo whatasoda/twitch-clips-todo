@@ -487,7 +487,6 @@ import { createStorageAPI } from './storage';
 import { createRuntimeAPI } from './runtime';
 import { createTabsAPI } from './tabs';
 import { createCommandsAPI } from './commands';
-import { createSidePanelAPI } from './sidePanel';
 import { createAlarmsAPI } from './alarms';
 
 export function createChromeAPI() {
@@ -496,7 +495,6 @@ export function createChromeAPI() {
     runtime: createRuntimeAPI(),
     tabs: createTabsAPI(),
     commands: createCommandsAPI(),
-    sidePanel: createSidePanelAPI(),
     alarms: createAlarmsAPI(),
   };
 }
@@ -753,10 +751,6 @@ createTieredCache<T>(memory, persistent): CacheService<T>
 - The "Clip Later" button injection relies on aria-label matching for only 4 languages ("Clip", "クリップ", "클립", "Clipe")
 - Twitch UI changes can break detection at any time
 - Possible improvements: more robust selector strategy, or MutationObserver-based generic detection
-
-### Twitch Auth Benefit Explanation
-- The "Connect Twitch" button lacks explanation of what authentication enables (VOD auto-linking, recent VOD fetching, etc.)
-- Consider adding a tooltip or descriptive text near the connect button
 
 ### Find VOD Feedback
 - The "Find VOD" button provides no loading indicator or result feedback after clicking
