@@ -1,14 +1,23 @@
-import { Show, Suspense } from "solid-js";
+import { createMemo, createSignal, Show, Suspense } from "solid-js";
 import { Box, Center } from "../../styled-system/jsx";
 import { t } from "../shared/i18n";
 import { MSG } from "../shared/i18n/message-keys";
 import { Header, RecordList } from "./components";
+import { TabSwitcher, type TabValue } from "./components/TabSwitcher";
 import { useCurrentTab, useRecordActions, useRecords } from "./hooks";
 
 export default function App() {
   const { records, error } = useRecords();
   const { pageInfo } = useCurrentTab();
   const { updateMemo, deleteRecord, openClipCreation, discoverVodForStreamer } = useRecordActions();
+  const [activeTab, setActiveTab] = createSignal<TabValue>("pending");
+
+  const pendingCount = createMemo(
+    () => records()?.filter((r) => r.completedAt === null).length ?? 0,
+  );
+  const completedCount = createMemo(
+    () => records()?.filter((r) => r.completedAt !== null).length ?? 0,
+  );
 
   return (
     <Box minH="100vh" bg="bg.canvas" color="fg.default">
@@ -29,13 +38,22 @@ export default function App() {
       >
         <Show when={records()}>
           {(recordsData) => (
-            <RecordList
-              records={recordsData()}
-              onUpdateMemo={updateMemo}
-              onDelete={deleteRecord}
-              onOpenClip={openClipCreation}
-              onFindVod={discoverVodForStreamer}
-            />
+            <>
+              <TabSwitcher
+                activeTab={activeTab()}
+                onTabChange={setActiveTab}
+                pendingCount={pendingCount()}
+                completedCount={completedCount()}
+              />
+              <RecordList
+                records={recordsData()}
+                filter={activeTab()}
+                onUpdateMemo={updateMemo}
+                onDelete={deleteRecord}
+                onOpenClip={openClipCreation}
+                onFindVod={discoverVodForStreamer}
+              />
+            </>
           )}
         </Show>
       </Suspense>

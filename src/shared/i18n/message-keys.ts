@@ -18,9 +18,15 @@ export const MSG = {
   POPUP_BADGE_LIVE: "popup_badgeLive",
   POPUP_BADGE_VOD: "popup_badgeVod",
 
+  // Popup - Tabs
+  POPUP_TAB_PENDING: "popup_tabPending",
+  POPUP_TAB_COMPLETED: "popup_tabCompleted",
+
   // Popup - Empty State
   POPUP_EMPTY_TITLE: "popup_emptyTitle",
   POPUP_EMPTY_DESCRIPTION: "popup_emptyDescription",
+  POPUP_EMPTY_COMPLETED_TITLE: "popup_emptyCompletedTitle",
+  POPUP_EMPTY_COMPLETED_DESCRIPTION: "popup_emptyCompletedDescription",
 
   // Auth
   AUTH_DISCONNECT: "auth_disconnect",

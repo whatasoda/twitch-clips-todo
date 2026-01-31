@@ -1,12 +1,17 @@
 import { createMemo, For, Show } from "solid-js";
+import { t } from "@/shared/i18n";
+import { MSG } from "@/shared/i18n/message-keys";
 import { Box } from "../../../styled-system/jsx";
 import type { Record } from "../../core/record";
 import { groupRecordsByStreamer, sortRecordsByDate } from "../../core/record";
 import { EmptyState } from "./EmptyState";
+import { RecordItem } from "./RecordItem";
 import { StreamerGroup } from "./StreamerGroup";
+import type { TabValue } from "./TabSwitcher";
 
 interface RecordListProps {
   records: Record[];
+  filter: TabValue;
   onUpdateMemo: (id: string, memo: string) => Promise<unknown>;
   onDelete: (id: string) => Promise<unknown>;
   onOpenClip: (record: Record) => Promise<unknown>;
@@ -14,8 +19,18 @@ interface RecordListProps {
 }
 
 export function RecordList(props: RecordListProps) {
+  const filteredRecords = createMemo(() => {
+    if (props.filter === "completed") {
+      return props.records
+        .filter((r): r is Record & { completedAt: string } => r.completedAt !== null)
+        .sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
+    }
+    return props.records.filter((r) => r.completedAt === null);
+  });
+
   const groupedRecords = createMemo(() => {
-    const sorted = sortRecordsByDate(props.records);
+    if (props.filter === "completed") return [];
+    const sorted = sortRecordsByDate(filteredRecords());
     const groups = groupRecordsByStreamer(sorted);
     return Array.from(groups.entries()).map(([streamerId, records]) => ({
       streamerId,
@@ -26,21 +41,62 @@ export function RecordList(props: RecordListProps) {
 
   return (
     <Box p="4">
-      <Show when={props.records.length > 0} fallback={<EmptyState />}>
-        <For each={groupedRecords()}>
-          {(group) => (
-            <StreamerGroup
-              streamerName={group.streamerName}
-              streamerId={group.streamerId}
-              records={group.records}
-              onUpdateMemo={props.onUpdateMemo}
-              onDelete={props.onDelete}
-              onOpenClip={props.onOpenClip}
-              onFindVod={props.onFindVod}
-            />
-          )}
-        </For>
+      <Show
+        when={filteredRecords().length > 0}
+        fallback={
+          <EmptyState
+            title={props.filter === "completed" ? t(MSG.POPUP_EMPTY_COMPLETED_TITLE) : undefined}
+            description={
+              props.filter === "completed" ? t(MSG.POPUP_EMPTY_COMPLETED_DESCRIPTION) : undefined
+            }
+          />
+        }
+      >
+        <Show
+          when={props.filter === "pending"}
+          fallback={<CompletedList records={filteredRecords()} onDelete={props.onDelete} />}
+        >
+          <For each={groupedRecords()}>
+            {(group) => (
+              <StreamerGroup
+                streamerName={group.streamerName}
+                streamerId={group.streamerId}
+                records={group.records}
+                onUpdateMemo={props.onUpdateMemo}
+                onDelete={props.onDelete}
+                onOpenClip={props.onOpenClip}
+                onFindVod={props.onFindVod}
+              />
+            )}
+          </For>
+        </Show>
       </Show>
     </Box>
+  );
+}
+
+function CompletedList(props: { records: Record[]; onDelete: (id: string) => Promise<unknown> }) {
+  return (
+    <Box borderWidth="1px" borderColor="border.default" borderRadius="md" overflow="hidden">
+      <For each={props.records}>
+        {(record) => <CompletedRecordItem record={record} onDelete={props.onDelete} />}
+      </For>
+    </Box>
+  );
+}
+
+function CompletedRecordItem(props: {
+  record: Record;
+  onDelete: (id: string) => Promise<unknown>;
+}) {
+  return (
+    <RecordItem
+      record={props.record}
+      onUpdateMemo={async () => {}}
+      onDelete={props.onDelete}
+      onOpenClip={async () => {}}
+      onFindVod={async () => {}}
+      showStreamerName
+    />
   );
 }

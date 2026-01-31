@@ -16,6 +16,7 @@ interface RecordItemProps {
   onDelete: (id: string) => Promise<unknown>;
   onOpenClip: (record: Record) => Promise<unknown>;
   onFindVod: (streamerId: string) => Promise<unknown>;
+  showStreamerName?: boolean;
 }
 
 export function RecordItem(props: RecordItemProps) {
@@ -76,9 +77,16 @@ export function RecordItem(props: RecordItemProps) {
       _hover={{ bg: "bg.muted" }}
     >
       <Flex alignItems="center" justifyContent="space-between" mb="2">
-        <Box fontWeight="bold" color="accent.default" fontFamily="mono">
-          {formatTimestamp(props.record.timestampSeconds)}
-        </Box>
+        <HStack gap="2">
+          <Show when={props.showStreamerName}>
+            <Box fontWeight="semibold" fontSize="sm">
+              {props.record.streamerName}
+            </Box>
+          </Show>
+          <Box fontWeight="bold" color="accent.default" fontFamily="mono">
+            {formatTimestamp(props.record.timestampSeconds)}
+          </Box>
+        </HStack>
         <HStack gap="1">
           <Show when={canCreateClip()}>
             <Button
