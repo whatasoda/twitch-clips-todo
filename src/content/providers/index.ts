@@ -5,7 +5,6 @@ export {
 } from "./broadcast-id-provider";
 export {
   createApiStreamerProvider,
-  createDomStreamerProvider,
   getStreamerWithFallback,
   type StreamerResult,
 } from "./streamer-provider";

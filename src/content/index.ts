@@ -13,6 +13,7 @@ const recordHandler = createRecordHandler({
   getCurrentPageInfo,
   onRecordComplete: () =>
     pageHandler.refreshFloatingWidget(getCurrentPageInfo().streamerId ?? undefined),
+  onOpenPopup: openPopup,
 });
 
 const pageHandler = createPageHandler({
