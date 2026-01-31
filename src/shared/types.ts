@@ -23,6 +23,8 @@ export type MessageToBackground =
   | { type: "UPDATE_MEMO"; payload: { id: string; memo: string } }
   | { type: "MARK_COMPLETED"; payload: { id: string } }
   | { type: "DELETE_RECORD"; payload: { id: string } }
+  | { type: "DELETE_RECORDS_BY_STREAMER"; payload: { streamerId: string } }
+  | { type: "DELETE_COMPLETED_RECORDS" }
   | { type: "GET_RECORDS"; payload?: { streamerId?: string } }
   | { type: "LINK_VOD"; payload: LinkVodPayload }
   | { type: "GET_PENDING_COUNT"; payload: { streamerId: string } }

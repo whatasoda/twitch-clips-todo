@@ -156,6 +156,17 @@ export async function handleMessage(
         return { success: true, data: null };
       }
 
+      case "DELETE_RECORDS_BY_STREAMER": {
+        const { streamerId } = message.payload as { streamerId: string };
+        const deleted = await recordService.deleteByStreamerId(streamerId);
+        return { success: true, data: deleted };
+      }
+
+      case "DELETE_COMPLETED_RECORDS": {
+        const deleted = await recordService.deleteCompleted();
+        return { success: true, data: deleted };
+      }
+
       case "LINK_VOD": {
         const records = await linkingService.linkVod(message.payload as LinkVodPayload);
         return { success: true, data: records };

@@ -61,6 +61,17 @@ export function useRecordActions() {
     // Do NOT mark as completed — user selected VOD manually, clip success is uncertain
   }
 
+  async function deleteByStreamerId(streamerId: string): Promise<number> {
+    return sendMessage<number>({
+      type: "DELETE_RECORDS_BY_STREAMER",
+      payload: { streamerId },
+    });
+  }
+
+  async function deleteCompleted(): Promise<number> {
+    return sendMessage<number>({ type: "DELETE_COMPLETED_RECORDS" });
+  }
+
   return {
     updateMemo,
     markCompleted,
@@ -69,5 +80,7 @@ export function useRecordActions() {
     discoverVodForStreamer,
     getRecentVods,
     openClipForVod,
+    deleteByStreamerId,
+    deleteCompleted,
   };
 }

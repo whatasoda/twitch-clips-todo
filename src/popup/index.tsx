@@ -1,7 +1,9 @@
+import { Trash2 } from "lucide-solid";
 import { createMemo, createSignal, Show, Suspense } from "solid-js";
-import { Box, Center } from "../../styled-system/jsx";
-import { t } from "../shared/i18n";
-import { MSG } from "../shared/i18n/message-keys";
+import { Button } from "@/components/ui/button";
+import { t } from "@/shared/i18n";
+import { MSG } from "@/shared/i18n/message-keys";
+import { Box, Center, Flex } from "../../styled-system/jsx";
 import { Header, RecordList } from "./components";
 import { TabSwitcher, type TabValue } from "./components/TabSwitcher";
 import { useCurrentTab, useRecordActions, useRecords } from "./hooks";
@@ -16,6 +18,8 @@ export default function App() {
     discoverVodForStreamer,
     getRecentVods,
     openClipForVod,
+    deleteByStreamerId,
+    deleteCompleted,
   } = useRecordActions();
   const [activeTab, setActiveTab] = createSignal<TabValue>("pending");
 
@@ -52,6 +56,21 @@ export default function App() {
                 pendingCount={pendingCount()}
                 completedCount={completedCount()}
               />
+              <Show when={activeTab() === "completed" && completedCount() > 0}>
+                <Flex px="4" pt="2" justifyContent="flex-end">
+                  <Button
+                    size="xs"
+                    variant="ghost"
+                    onClick={() => {
+                      if (confirm(t(MSG.RECORD_DELETE_ALL_COMPLETED_CONFIRM))) {
+                        deleteCompleted();
+                      }
+                    }}
+                  >
+                    <Trash2 size={14} /> {t(MSG.RECORD_DELETE_ALL_COMPLETED)}
+                  </Button>
+                </Flex>
+              </Show>
               <RecordList
                 records={recordsData()}
                 filter={activeTab()}
@@ -61,6 +80,7 @@ export default function App() {
                 onFindVod={discoverVodForStreamer}
                 onGetRecentVods={getRecentVods}
                 onSelectVod={openClipForVod}
+                onDeleteAll={deleteByStreamerId}
               />
             </>
           )}

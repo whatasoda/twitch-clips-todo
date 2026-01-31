@@ -44,6 +44,10 @@ export const MSG = {
   RECORD_SELECT_VOD: "record_selectVod",
   RECORD_NO_VODS_AVAILABLE: "record_noVodsAvailable",
   RECORD_DELETE_LABEL: "record_deleteLabel",
+  RECORD_DELETE_ALL: "record_deleteAll",
+  RECORD_DELETE_ALL_CONFIRM: "record_deleteAllConfirm",
+  RECORD_DELETE_ALL_COMPLETED: "record_deleteAllCompleted",
+  RECORD_DELETE_ALL_COMPLETED_CONFIRM: "record_deleteAllCompletedConfirm",
   RECORD_ADD_MEMO_PLACEHOLDER: "record_addMemoPlaceholder",
   RECORD_ENTER_MEMO_PLACEHOLDER: "record_enterMemoPlaceholder",
 

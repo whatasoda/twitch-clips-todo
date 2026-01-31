@@ -19,6 +19,7 @@ interface RecordListProps {
   onFindVod: (streamerId: string) => Promise<unknown>;
   onGetRecentVods: (streamerId: string) => Promise<VodMetadata[]>;
   onSelectVod: (record: Record, vodId: string, offsetSeconds: number) => Promise<void>;
+  onDeleteAll: (streamerId: string) => Promise<unknown>;
 }
 
 export function RecordList(props: RecordListProps) {
@@ -71,6 +72,7 @@ export function RecordList(props: RecordListProps) {
                 onFindVod={props.onFindVod}
                 onGetRecentVods={props.onGetRecentVods}
                 onSelectVod={props.onSelectVod}
+                onDeleteAll={props.onDeleteAll}
               />
             )}
           </For>

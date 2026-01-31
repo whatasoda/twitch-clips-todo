@@ -129,6 +129,22 @@
     "message": "Delete record",
     "description": "Delete button aria-label"
   },
+  "record_deleteAll": {
+    "message": "Delete all",
+    "description": "Delete all records for a streamer"
+  },
+  "record_deleteAllConfirm": {
+    "message": "Delete all records for this streamer?",
+    "description": "Confirm deletion of all records for a streamer"
+  },
+  "record_deleteAllCompleted": {
+    "message": "Delete all completed",
+    "description": "Delete all completed records"
+  },
+  "record_deleteAllCompletedConfirm": {
+    "message": "Delete all completed records?",
+    "description": "Confirm deletion of all completed records"
+  },
   "record_addMemoPlaceholder": {
     "message": "Click to add memo...",
     "description": "Memo placeholder when empty"

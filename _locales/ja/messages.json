@@ -129,6 +129,22 @@
     "message": "記録を削除",
     "description": "削除ボタンのaria-label"
   },
+  "record_deleteAll": {
+    "message": "すべて削除",
+    "description": "ストリーマーの全レコード削除"
+  },
+  "record_deleteAllConfirm": {
+    "message": "この配信者のすべての記録を削除しますか？",
+    "description": "ストリーマーの全レコード削除確認"
+  },
+  "record_deleteAllCompleted": {
+    "message": "完了済みをすべて削除",
+    "description": "完了済みレコード全削除"
+  },
+  "record_deleteAllCompletedConfirm": {
+    "message": "完了済みの記録をすべて削除しますか？",
+    "description": "完了済みレコード全削除確認"
+  },
   "record_addMemoPlaceholder": {
     "message": "クリックしてメモを追加...",
     "description": "メモが空の時のプレースホルダー"
