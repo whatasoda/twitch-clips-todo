@@ -6,8 +6,8 @@ import { t } from "@/shared/i18n";
 import { MSG } from "@/shared/i18n/message-keys";
 import { Box, Flex, HStack } from "../../../styled-system/jsx";
 import type { Record } from "../../core/record";
-import type { DiscoveryResult } from "../../services/vod-discovery.service";
 import type { VodMetadata } from "../../services/twitch.service";
+import type { DiscoveryResult } from "../../services/vod-discovery.service";
 import { RecordItem } from "./RecordItem";
 
 interface StreamerGroupProps {
@@ -99,20 +99,8 @@ export function StreamerGroup(props: StreamerGroupProps) {
             px="3"
             py="2"
             fontSize="xs"
-            color={
-              result().error
-                ? "red.11"
-                : result().linkedCount > 0
-                  ? "green.11"
-                  : "fg.muted"
-            }
-            bg={
-              result().error
-                ? "red.2"
-                : result().linkedCount > 0
-                  ? "green.2"
-                  : "bg.muted"
-            }
+            color={result().error ? "red.11" : result().linkedCount > 0 ? "green.11" : "fg.muted"}
+            bg={result().error ? "red.2" : result().linkedCount > 0 ? "green.2" : "bg.muted"}
           >
             {result().error
               ? t(MSG.RECORD_VOD_DISCOVERY_ERROR)

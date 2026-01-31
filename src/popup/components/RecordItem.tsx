@@ -9,9 +9,8 @@ import { MSG } from "@/shared/i18n/message-keys";
 import { Box, Flex, HStack } from "../../../styled-system/jsx";
 import type { Record } from "../../core/record";
 import { formatTimestamp } from "../../core/twitch";
-
-import type { DiscoveryResult } from "../../services/vod-discovery.service";
 import type { VodMetadata } from "../../services/twitch.service";
+import type { DiscoveryResult } from "../../services/vod-discovery.service";
 import { VodPicker } from "./VodPicker";
 
 interface RecordItemProps {

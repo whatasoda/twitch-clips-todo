@@ -752,10 +752,3 @@ createTieredCache<T>(memory, persistent): CacheService<T>
 - Twitch UI changes can break detection at any time
 - Possible improvements: more robust selector strategy, or MutationObserver-based generic detection
 
-### Find VOD Feedback
-- The "Find VOD" button provides no loading indicator or result feedback after clicking
-- Should show a toast notification with the result (e.g., "Linked N records" or "No matching VOD found")
-
-### 60-Day Auto-Cleanup Notification
-- Records older than 60 days are silently deleted by the cleanup service
-- Users should be notified before data is removed, or given a settings page to configure the threshold
