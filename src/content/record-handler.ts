@@ -2,7 +2,7 @@ import { t } from "@/shared/i18n";
 import { MSG } from "@/shared/i18n/message-keys";
 import type { PageInfo } from "../core/twitch";
 import type { CreateRecordPayload } from "../shared/types";
-import { createRecord } from "./messaging";
+import { checkAuthStatus, createRecord } from "./messaging";
 import {
   getBroadcastId,
   getLiveTimestamp,
@@ -15,10 +15,11 @@ import { showMemoInput, showToast } from "./ui";
 export interface RecordHandlerDeps {
   getCurrentPageInfo: () => PageInfo;
   onRecordComplete: () => void;
+  onOpenPopup: () => void;
 }
 
 export function createRecordHandler(deps: RecordHandlerDeps) {
-  const { getCurrentPageInfo, onRecordComplete } = deps;
+  const { getCurrentPageInfo, onRecordComplete, onOpenPopup } = deps;
 
   // Page-level caches (cleared on page navigation via onRecordComplete's parent)
   let cachedLoginFromUrl: string | null = null;
@@ -33,6 +34,13 @@ export function createRecordHandler(deps: RecordHandlerDeps) {
   }
 
   async function handleRecord(): Promise<void> {
+    const { isAuthenticated } = await checkAuthStatus();
+    if (!isAuthenticated) {
+      showToast(t(MSG.TOAST_AUTH_REQUIRED), "info");
+      onOpenPopup();
+      return;
+    }
+
     const pageInfo = getCurrentPageInfo();
     if (pageInfo.type !== "live" && pageInfo.type !== "vod") {
       showToast(t(MSG.TOAST_NOT_AVAILABLE), "info");

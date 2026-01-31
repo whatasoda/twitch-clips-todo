@@ -4,6 +4,12 @@ import type { DiscoveryResult } from "../services/vod-discovery.service";
 import { sendMessage } from "../shared/messaging";
 import type { CreateRecordPayload, LinkVodPayload } from "../shared/types";
 
+// Auth status
+
+export async function checkAuthStatus(): Promise<{ isAuthenticated: boolean }> {
+  return sendMessage<{ isAuthenticated: boolean }>({ type: "TWITCH_GET_AUTH_STATUS" });
+}
+
 // Twitch API messaging functions
 
 export async function getStreamerInfo(login: string): Promise<StreamerInfo | null> {

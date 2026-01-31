@@ -68,14 +68,11 @@ export function createDomVideoTimestampProvider(): Provider<TimestampResult> {
 }
 
 /**
- * Get timestamp for live stream with API -> DOM fallback chain.
+ * Get timestamp for live stream via API.
+ * Requires authentication.
  */
 export async function getLiveTimestamp(login: string): Promise<TimestampResult | null> {
-  return chainProviders([
-    createApiTimestampProvider(login),
-    createDomPlayerTimestampProvider(),
-    createDomVideoTimestampProvider(),
-  ]);
+  return createApiTimestampProvider(login).get();
 }
 
 /**
