@@ -63,6 +63,8 @@ export function RecordList(props: RecordListProps) {
               records={filteredRecords()}
               onUpdateMemo={props.onUpdateMemo}
               onDelete={props.onDelete}
+              onOpenClip={props.onOpenClip}
+              onFindVod={props.onFindVod}
             />
           }
         >
@@ -92,6 +94,8 @@ function CompletedList(props: {
   records: Record[];
   onUpdateMemo: (id: string, memo: string) => Promise<unknown>;
   onDelete: (id: string) => Promise<unknown>;
+  onOpenClip: (record: Record) => Promise<unknown>;
+  onFindVod: (streamerId: string) => Promise<unknown>;
 }) {
   return (
     <Box borderWidth="1px" borderColor="border.default" borderRadius="md" overflow="hidden">
@@ -101,6 +105,8 @@ function CompletedList(props: {
             record={record}
             onUpdateMemo={props.onUpdateMemo}
             onDelete={props.onDelete}
+            onOpenClip={props.onOpenClip}
+            onFindVod={props.onFindVod}
           />
         )}
       </For>
@@ -112,14 +118,16 @@ function CompletedRecordItem(props: {
   record: Record;
   onUpdateMemo: (id: string, memo: string) => Promise<unknown>;
   onDelete: (id: string) => Promise<unknown>;
+  onOpenClip: (record: Record) => Promise<unknown>;
+  onFindVod: (streamerId: string) => Promise<unknown>;
 }) {
   return (
     <RecordItem
       record={props.record}
       onUpdateMemo={props.onUpdateMemo}
       onDelete={props.onDelete}
-      onOpenClip={async () => {}}
-      onFindVod={async () => {}}
+      onOpenClip={props.onOpenClip}
+      onFindVod={props.onFindVod}
       showStreamerName
     />
   );
