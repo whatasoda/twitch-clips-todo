@@ -5,15 +5,18 @@ import { t } from "@/shared/i18n";
 import { MSG } from "@/shared/i18n/message-keys";
 import { Box, Center, Flex } from "../../styled-system/jsx";
 import { Header, RecordList } from "./components";
+import { FirstRecordHint } from "./components/FirstRecordHint";
 import { TabSwitcher, type TabValue } from "./components/TabSwitcher";
 import { WelcomeCard } from "./components/WelcomeCard";
 import { useAuth } from "./hooks/use-auth";
+import { useOnboarding } from "./hooks/use-onboarding";
 import { useCurrentTab, useRecordActions, useRecords } from "./hooks";
 
 export default function App() {
   const { records, error } = useRecords();
   const { pageInfo } = useCurrentTab();
   const { isAuthenticated } = useAuth();
+  const { shouldShowFirstRecordHint, dismissFirstRecordHint } = useOnboarding();
   const {
     updateMemo,
     deleteRecord,
@@ -63,6 +66,9 @@ export default function App() {
                   pendingCount={pendingCount()}
                   completedCount={completedCount()}
                 />
+                <Show when={shouldShowFirstRecordHint(true, pendingCount() + completedCount())}>
+                  <FirstRecordHint onDismiss={dismissFirstRecordHint} />
+                </Show>
                 <Show when={activeTab() === "completed" && completedCount() > 0}>
                   <Flex px="4" pt="2" justifyContent="flex-end">
                     <Button
