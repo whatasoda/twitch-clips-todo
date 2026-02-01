@@ -1,4 +1,4 @@
-export { createTwitchAuthAPI, type TwitchAuthAPI } from "./auth";
+export { createTwitchAuthAPI, type PollingState, type TwitchAuthAPI } from "./auth";
 export {
   createTwitchApiClient,
   type RateLimitInfo,

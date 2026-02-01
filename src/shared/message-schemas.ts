@@ -47,6 +47,9 @@ export const memoPayloadSchema = z.object({
 export const pollTokenPayloadSchema = z.object({
   deviceCode: z.string(),
   interval: z.number(),
+  userCode: z.string(),
+  verificationUri: z.string(),
+  expiresIn: z.number(),
 });
 
 export const getRecordsPayloadSchema = z

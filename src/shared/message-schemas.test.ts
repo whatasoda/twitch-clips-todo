@@ -193,6 +193,9 @@ describe("pollTokenPayloadSchema", () => {
     const result = pollTokenPayloadSchema.safeParse({
       deviceCode: "code123",
       interval: 5,
+      userCode: "UC123",
+      verificationUri: "https://id.twitch.tv/activate",
+      expiresIn: 1800,
     });
     expect(result.success).toBe(true);
   });

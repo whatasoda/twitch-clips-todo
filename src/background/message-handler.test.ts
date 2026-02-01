@@ -42,6 +42,8 @@ function createMockTwitchService(): { [K in keyof TwitchService]: Mock } {
     isAuthenticated: vi.fn(),
     startDeviceAuth: vi.fn(),
     pollForToken: vi.fn(),
+    getAuthProgress: vi.fn(),
+    awaitNextPoll: vi.fn(),
     cancelAuth: vi.fn(),
     logout: vi.fn(),
     getStreamerInfo: vi.fn(),
@@ -262,11 +264,51 @@ describe("handleMessage", () => {
       twitchService.pollForToken.mockResolvedValue(token);
 
       const result = await handleMessage(
-        { type: "TWITCH_POLL_TOKEN", payload: { deviceCode: "dc1", interval: 5 } },
+        {
+          type: "TWITCH_POLL_TOKEN",
+          payload: {
+            deviceCode: "dc1",
+            interval: 5,
+            userCode: "UC123",
+            verificationUri: "https://id.twitch.tv/activate",
+            expiresIn: 1800,
+          },
+        },
         deps,
       );
       expect(result).toEqual({ success: true, data: token });
-      expect(twitchService.pollForToken).toHaveBeenCalledWith("dc1", 5);
+      expect(twitchService.pollForToken).toHaveBeenCalledWith("dc1", 5, {
+        userCode: "UC123",
+        verificationUri: "https://id.twitch.tv/activate",
+        expiresIn: 1800,
+      });
+    });
+
+    it("TWITCH_GET_AUTH_PROGRESS returns polling state", async () => {
+      const pollingState = {
+        userCode: "UC123",
+        verificationUri: "https://id.twitch.tv/activate",
+        expiresAt: Date.now() + 1800000,
+      };
+      twitchService.getAuthProgress.mockReturnValue(pollingState);
+
+      const result = await send({ type: "TWITCH_GET_AUTH_PROGRESS" }, deps);
+      expect(result).toEqual({ success: true, data: pollingState });
+    });
+
+    it("TWITCH_GET_AUTH_PROGRESS returns null when not polling", async () => {
+      twitchService.getAuthProgress.mockReturnValue(null);
+
+      const result = await send({ type: "TWITCH_GET_AUTH_PROGRESS" }, deps);
+      expect(result).toEqual({ success: true, data: null });
+    });
+
+    it("TWITCH_AWAIT_NEXT_POLL waits for next poll", async () => {
+      twitchService.awaitNextPoll.mockResolvedValue(undefined);
+
+      const result = await send({ type: "TWITCH_AWAIT_NEXT_POLL" }, deps);
+      expect(result).toEqual({ success: true, data: null });
+      expect(twitchService.awaitNextPoll).toHaveBeenCalled();
     });
 
     it("TWITCH_CANCEL_AUTH calls cancelAuth", async () => {

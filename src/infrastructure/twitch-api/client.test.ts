@@ -24,6 +24,8 @@ function createMockAuth(): { [K in keyof TwitchAuthAPI]: Mock } {
     startDeviceAuth: vi.fn(),
     pollForToken: vi.fn(),
     cancelPolling: vi.fn(),
+    getPollingState: vi.fn(),
+    awaitNextPoll: vi.fn(),
     refreshToken: vi.fn(),
     revokeToken: vi.fn(),
     getStoredToken: vi.fn(),

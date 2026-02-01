@@ -76,8 +76,25 @@ export async function handleMessage(
         const token = await twitchService.pollForToken(
           parsed.data.deviceCode,
           parsed.data.interval,
+          {
+            userCode: parsed.data.userCode,
+            verificationUri: parsed.data.verificationUri,
+            expiresIn: parsed.data.expiresIn,
+          },
         );
         return { success: true, data: token };
+      }
+
+      case "TWITCH_GET_AUTH_PROGRESS": {
+        const progress = twitchService ? twitchService.getAuthProgress() : null;
+        return { success: true, data: progress };
+      }
+
+      case "TWITCH_AWAIT_NEXT_POLL": {
+        if (twitchService) {
+          await twitchService.awaitNextPoll();
+        }
+        return { success: true, data: null };
       }
 
       case "TWITCH_CANCEL_AUTH": {
