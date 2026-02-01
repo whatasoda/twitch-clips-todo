@@ -174,8 +174,6 @@ export function injectRecordButton(onClick: () => void): void {
 
   // If not adjacent to clip button, set up observer to attempt upgrade
   if (buttonElement && !isAdjacentToClipButton()) {
-    const isFixedPosition = buttonElement.style.position === "fixed";
-
     observer = new MutationObserver(() => {
       const existingButton = buttonElement;
       if (!existingButton) return;
@@ -189,7 +187,9 @@ export function injectRecordButton(onClick: () => void): void {
       attemptInjection(onClick);
 
       // If we achieved clip-adjacent or at least non-fixed, stop observing
-      if (buttonElement && (isAdjacentToClipButton() || !isFixedPosition)) {
+      // buttonElement is reassigned by attemptInjection above
+      const newButton = buttonElement as HTMLElement | null;
+      if (newButton && (isAdjacentToClipButton() || newButton.style.position !== "fixed")) {
         observer?.disconnect();
         observer = null;
       }
