@@ -128,7 +128,7 @@ describe("createTwitchApiClient", () => {
 
       await client.get("/users");
 
-      const [, options] = mockFetch.mock.calls[0]!;
+      const [, options] = mockFetch.mock.calls[0] ?? [];
       expect(options.headers.Authorization).toBe("Bearer test_access_token");
       expect(options.headers["Client-Id"]).toBeTruthy();
     });
@@ -138,7 +138,7 @@ describe("createTwitchApiClient", () => {
 
       await client.get("/users", { login: "testuser" });
 
-      const [url] = mockFetch.mock.calls[0]!;
+      const [url] = mockFetch.mock.calls[0] ?? [];
       expect(url).toContain("/users");
       expect(url).toContain("login=testuser");
     });
