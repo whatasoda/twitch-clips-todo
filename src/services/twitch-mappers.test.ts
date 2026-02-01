@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { TwitchStream, TwitchUser, TwitchVideo } from "../infrastructure/twitch-api";
-import { mapStreamToLiveStreamInfo, mapUserToStreamerInfo, mapVideoToVodMetadata } from "./twitch-mappers";
+import {
+  mapStreamToLiveStreamInfo,
+  mapUserToStreamerInfo,
+  mapVideoToVodMetadata,
+} from "./twitch-mappers";
 
 function createTwitchUser(overrides?: Partial<TwitchUser>): TwitchUser {
   return {
