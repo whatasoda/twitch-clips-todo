@@ -1,6 +1,7 @@
 import type { ChromeStorageAPI } from "../infrastructure/chrome/types";
 import type {
   DeviceCodeResponse,
+  PollingState,
   TwitchApiClient,
   TwitchAuthAPI,
   TwitchAuthToken,
@@ -37,7 +38,12 @@ export interface TwitchServiceDeps {
 export interface TwitchService {
   isAuthenticated(): Promise<boolean>;
   startDeviceAuth(): Promise<DeviceCodeResponse>;
-  pollForToken(deviceCode: string, interval: number): Promise<TwitchAuthToken>;
+  pollForToken(
+    deviceCode: string,
+    interval: number,
+    deviceInfo: { userCode: string; verificationUri: string; expiresIn: number },
+  ): Promise<TwitchAuthToken>;
+  getAuthProgress(): PollingState | null;
   cancelAuth(): void;
   logout(): Promise<void>;
   getStreamerInfo(login: string): Promise<StreamerInfo | null>;
@@ -104,8 +110,16 @@ export function createTwitchService(deps: TwitchServiceDeps): TwitchService {
       return auth.startDeviceAuth();
     },
 
-    async pollForToken(deviceCode: string, interval: number): Promise<TwitchAuthToken> {
-      return auth.pollForToken(deviceCode, interval);
+    async pollForToken(
+      deviceCode: string,
+      interval: number,
+      deviceInfo: { userCode: string; verificationUri: string; expiresIn: number },
+    ): Promise<TwitchAuthToken> {
+      return auth.pollForToken(deviceCode, interval, deviceInfo);
+    },
+
+    getAuthProgress(): PollingState | null {
+      return auth.getPollingState();
     },
 
     cancelAuth(): void {

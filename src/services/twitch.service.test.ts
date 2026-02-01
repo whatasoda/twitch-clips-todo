@@ -15,6 +15,7 @@ function createMockAuth(): { [K in keyof TwitchAuthAPI]: Mock } {
     startDeviceAuth: vi.fn(),
     pollForToken: vi.fn(),
     cancelPolling: vi.fn(),
+    getPollingState: vi.fn(),
     refreshToken: vi.fn(),
     revokeToken: vi.fn(),
     getStoredToken: vi.fn(),
@@ -116,7 +117,27 @@ describe("createTwitchService", () => {
     it("pollForToken delegates to auth", async () => {
       const token = { access_token: "at1" };
       auth.pollForToken.mockResolvedValue(token);
-      expect(await service.pollForToken("dc1", 5)).toBe(token);
+      const deviceInfo = {
+        userCode: "UC123",
+        verificationUri: "https://id.twitch.tv/activate",
+        expiresIn: 1800,
+      };
+      expect(await service.pollForToken("dc1", 5, deviceInfo)).toBe(token);
+    });
+
+    it("getAuthProgress delegates to auth.getPollingState", () => {
+      const pollingState = {
+        userCode: "UC123",
+        verificationUri: "https://id.twitch.tv/activate",
+        expiresAt: Date.now() + 1800000,
+      };
+      auth.getPollingState.mockReturnValue(pollingState);
+      expect(service.getAuthProgress()).toBe(pollingState);
+    });
+
+    it("getAuthProgress returns null when not polling", () => {
+      auth.getPollingState.mockReturnValue(null);
+      expect(service.getAuthProgress()).toBeNull();
     });
 
     it("cancelAuth calls auth.cancelPolling", () => {

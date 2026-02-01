@@ -31,7 +31,17 @@ export type MessageToBackground =
   // Twitch API messages
   | { type: "TWITCH_GET_AUTH_STATUS" }
   | { type: "TWITCH_START_DEVICE_AUTH" }
-  | { type: "TWITCH_POLL_TOKEN"; payload: { deviceCode: string; interval: number } }
+  | {
+      type: "TWITCH_POLL_TOKEN";
+      payload: {
+        deviceCode: string;
+        interval: number;
+        userCode: string;
+        verificationUri: string;
+        expiresIn: number;
+      };
+    }
+  | { type: "TWITCH_GET_AUTH_PROGRESS" }
   | { type: "TWITCH_CANCEL_AUTH" }
   | { type: "TWITCH_LOGOUT" }
   | { type: "TWITCH_GET_STREAMER_INFO"; payload: { login: string } }

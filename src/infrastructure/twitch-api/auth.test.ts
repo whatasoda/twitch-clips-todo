@@ -196,4 +196,16 @@ describe("createTwitchAuthAPI", () => {
       expect(() => auth.cancelPolling()).not.toThrow();
     });
   });
+
+  describe("getPollingState", () => {
+    it("returns null when no polling is active", () => {
+      expect(auth.getPollingState()).toBeNull();
+    });
+
+    it("returns null after cancelPolling", () => {
+      // Even without active polling, cancelPolling should clear any state
+      auth.cancelPolling();
+      expect(auth.getPollingState()).toBeNull();
+    });
+  });
 });
