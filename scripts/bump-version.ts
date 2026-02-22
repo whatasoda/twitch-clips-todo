@@ -30,10 +30,7 @@ function parseVersion(version: string): [number, number, number] {
   ];
 }
 
-function bumpVersion(
-  current: string,
-  type: "patch" | "minor" | "major",
-): string {
+function bumpVersion(current: string, type: "patch" | "minor" | "major"): string {
   const [major, minor, patch] = parseVersion(current);
   switch (type) {
     case "major":
@@ -67,9 +64,7 @@ async function main() {
   // Ensure working directory is clean
   const status = await $`git status --porcelain`.text();
   if (status.trim()) {
-    console.error(
-      "Error: Working directory is not clean. Commit or stash changes first.",
-    );
+    console.error("Error: Working directory is not clean. Commit or stash changes first.");
     process.exit(1);
   }
 
@@ -88,10 +83,7 @@ async function main() {
   let newVersion: string;
 
   if (["patch", "minor", "major"].includes(arg)) {
-    newVersion = bumpVersion(
-      currentVersion,
-      arg as "patch" | "minor" | "major",
-    );
+    newVersion = bumpVersion(currentVersion, arg as "patch" | "minor" | "major");
   } else {
     // Validate version format
     parseVersion(arg);
@@ -138,9 +130,7 @@ After merging, the release workflow will:
   await $`gh pr create --title ${`chore: release v${newVersion}`} --body ${prBody}`;
 
   console.log(`\nDone! PR created for release v${newVersion}`);
-  console.log(
-    "After merging, the release workflow will create the tag and draft release.",
-  );
+  console.log("After merging, the release workflow will create the tag and draft release.");
 }
 
 main().catch((error) => {
