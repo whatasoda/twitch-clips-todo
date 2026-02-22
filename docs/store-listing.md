@@ -46,6 +46,14 @@ Required to schedule automatic cleanup of bookmark records older than 60 days. T
 **日本語:**
 60日以上経過したブックマーク記録の自動クリーンアップをスケジュールするために必要です。ユーザーの操作なしにストレージ使用量を管理するため、バックグラウンドで定期的に実行されます。
 
+### Host permission: `https://www.twitch.tv/*`, `https://twitch.tv/*`
+
+**English:**
+Required to inject a content script on twitch.tv pages. The content script detects the currently viewed stream or VOD, displays a floating action button for bookmarking moments, and reads page metadata (streamer name, stream title, playback timestamp). This is the core functionality of the extension and it cannot operate without access to twitch.tv. No data is collected from or sent to any third-party server; all bookmarked data is stored locally via chrome.storage.
+
+**日本語:**
+twitch.tv のページにコンテンツスクリプトを挿入するために必要です。コンテンツスクリプトは、現在視聴中の配信または VOD を検出し、瞬間をブックマークするためのフローティングアクションボタンを表示し、ページのメタデータ（配信者名、配信タイトル、再生タイムスタンプ）を読み取ります。これは拡張機能の中核機能であり、twitch.tv へのアクセスなしでは動作できません。データはサードパーティのサーバーに収集・送信されず、すべてのブックマークデータは chrome.storage を通じてローカルに保存されます。
+
 ## Store Description
 
 ### Short Description (132 characters max)
@@ -73,10 +81,8 @@ Key Features:
 • 60-day automatic cleanup keeps your data manageable
 
 Privacy First:
-• No login required for core features
 • All data stored locally on your device
 • No analytics, tracking, or external data collection
-• Optional Twitch connection for enhanced VOD linking
 
 **日本語:**
 Twitch でクリップにしたい瞬間をもう見逃しません。
@@ -93,10 +99,8 @@ Twitch Clip Todo は、ライブ配信や VOD の視聴中にワンクリック�
 • 60日間の自動クリーンアップでデータを管理しやすく
 
 プライバシー重視：
-• 基本機能にログイン不要
 • すべてのデータはデバイスにローカル保存
 • 分析、トラッキング、外部データ収集なし
-• 強化された VOD リンクのためのオプション Twitch 接続
 
 ## Privacy Policy URL
 
