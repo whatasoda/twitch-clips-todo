@@ -90,6 +90,14 @@ export function showMemoInput(
     isComposing = false;
   });
 
+  // Prevent all keyboard events from reaching Twitch's player shortcuts
+  // (e.g. 'f' for fullscreen, 'm' for mute, Space for play/pause)
+  for (const eventType of ["keydown", "keyup", "keypress"] as const) {
+    input.addEventListener(eventType, (e) => {
+      e.stopPropagation();
+    });
+  }
+
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -99,7 +107,6 @@ export function showMemoInput(
       }
     } else if (e.key === "Escape") {
       e.preventDefault();
-      e.stopPropagation();
       // Only cancel if not in IME composition (let IME handle ESC itself)
       if (!isComposing && !e.isComposing) {
         handleCancel();

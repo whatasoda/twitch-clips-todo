@@ -54,6 +54,7 @@ export function RecordList(props: RecordListProps) {
             description={
               props.filter === "completed" ? t(MSG.POPUP_EMPTY_COMPLETED_DESCRIPTION) : undefined
             }
+            showSteps={props.filter !== "completed"}
           />
         }
       >

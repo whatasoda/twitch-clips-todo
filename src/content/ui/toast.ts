@@ -3,7 +3,11 @@ import { styles } from "./styles";
 
 let toastTimeout: ReturnType<typeof setTimeout> | null = null;
 
-export function showToast(message: string, type: "success" | "error" | "info" = "info"): void {
+export function showToast(
+  message: string,
+  type: "success" | "error" | "info" = "info",
+  duration = 3000,
+): void {
   // Remove existing toast
   const existing = document.getElementById("twitch-clips-todo-toast");
   existing?.remove();
@@ -48,9 +52,8 @@ export function showToast(message: string, type: "success" | "error" | "info" = 
   shadow.appendChild(toast);
   document.body.appendChild(host);
 
-  // Auto-dismiss after 3 seconds
   toastTimeout = setTimeout(() => {
     toast.style.animation = "slideOut 0.3s ease forwards";
     setTimeout(() => host.remove(), 300);
-  }, 3000);
+  }, duration);
 }

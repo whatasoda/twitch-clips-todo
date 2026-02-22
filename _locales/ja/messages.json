@@ -77,6 +77,18 @@
     "message": "作成したクリップがここに表示されます。",
     "description": "完了済みタブの空状態説明"
   },
+  "popup_emptyStep1": {
+    "message": "Twitchの配信ページを開く",
+    "description": "空状態ステップ1"
+  },
+  "popup_emptyStep2": {
+    "message": "プレイヤーの「後でクリップ」をクリック、または Alt+Shift+C",
+    "description": "空状態ステップ2"
+  },
+  "popup_emptyStep3": {
+    "message": "メモを追加して保存",
+    "description": "空状態ステップ3"
+  },
   "auth_disconnect": {
     "message": "切断",
     "description": "切断ボタン"
@@ -92,6 +104,22 @@
   "auth_connectTwitch": {
     "message": "Twitchに接続",
     "description": "Twitch接続ボタン"
+  },
+  "auth_step1": {
+    "message": "1. 「リンクを開く」をクリック",
+    "description": "認証ステップ1の説明"
+  },
+  "auth_step2": {
+    "message": "2. 以下のコードを入力",
+    "description": "認証ステップ2の説明"
+  },
+  "auth_step3": {
+    "message": "3. Twitchで「許可」をクリック",
+    "description": "認証ステップ3の説明"
+  },
+  "auth_success": {
+    "message": "接続しました！",
+    "description": "認証成功メッセージ"
   },
   "record_deleteConfirm": {
     "message": "この記録を削除しますか？",
@@ -227,16 +255,28 @@
     "message": "Twitchの配信やVODページにアクセス",
     "description": "オンボーディングステップ1"
   },
+  "onboarding_step1Detail": {
+    "message": "プレイヤーに「後でクリップ」ボタンが表示されます",
+    "description": "オンボーディングステップ1の詳細"
+  },
   "onboarding_step2": {
     "message": "「後でクリップ」ボタンまたは Alt+Shift+C で記録",
     "description": "オンボーディングステップ2"
+  },
+  "onboarding_step2Detail": {
+    "message": "メモを追加して瞬間を覚えておきましょう",
+    "description": "オンボーディングステップ2の詳細"
   },
   "onboarding_step3": {
     "message": "後でこのポップアップからクリップを作成",
     "description": "オンボーディングステップ3"
   },
+  "onboarding_step3Detail": {
+    "message": "VODは自動的に紐づけられます",
+    "description": "オンボーディングステップ3の詳細"
+  },
   "onboarding_connectBenefit": {
-    "message": "Twitchアカウントを接続すると、瞬間の記録やVODの自動紐づけが可能になります。",
+    "message": "まずTwitchアカウントを接続してください。タイムスタンプの記録やVODの自動紐づけに必要です。",
     "description": "Twitch接続が必要な理由の説明"
   },
   "onboarding_firstRecordHint": {

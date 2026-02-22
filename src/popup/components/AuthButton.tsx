@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { t } from "@/shared/i18n";
 import { MSG } from "@/shared/i18n/message-keys";
 import { Box, Flex, styled } from "../../../styled-system/jsx";
-import { useAuth } from "../hooks/use-auth";
+import { useAuthContext } from "../contexts";
 
 const Code = styled("code", {
   base: {
@@ -18,7 +18,7 @@ const Code = styled("code", {
 
 export function AuthButton() {
   const { status, isAuthenticated, isLoading, deviceAuth, error, startAuth, cancelAuth, logout } =
-    useAuth();
+    useAuthContext();
 
   const openVerificationUrl = () => {
     const auth = deviceAuth();
@@ -40,11 +40,17 @@ export function AuthButton() {
 
         {/* Pending state - show device code */}
         <Match when={status() === "pending" && deviceAuth()}>
-          <Flex direction="column" gap="2" p="2" bg="gray.2" borderRadius="md">
-            <Box fontSize="xs" color="gray.11">
-              {t(MSG.AUTH_ENTER_CODE)}
+          <Flex direction="column" gap="2" p="3" bg="gray.2" borderRadius="md">
+            <Box fontSize="sm" color="fg.default">
+              {t(MSG.AUTH_STEP1)}
+            </Box>
+            <Box fontSize="sm" color="fg.default">
+              {t(MSG.AUTH_STEP2)}
             </Box>
             <Code>{deviceAuth()?.userCode}</Code>
+            <Box fontSize="sm" color="fg.default">
+              {t(MSG.AUTH_STEP3)}
+            </Box>
             <Flex gap="2">
               <Button size="xs" variant="outline" onClick={openVerificationUrl}>
                 <ExternalLink size={12} />

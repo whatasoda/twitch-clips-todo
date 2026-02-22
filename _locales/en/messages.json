@@ -77,6 +77,18 @@
     "message": "Clips you create will appear here.",
     "description": "Empty state description for completed tab"
   },
+  "popup_emptyStep1": {
+    "message": "Open a Twitch stream page",
+    "description": "Empty state step 1"
+  },
+  "popup_emptyStep2": {
+    "message": "Click \"Clip Later\" in the player or press Alt+Shift+C",
+    "description": "Empty state step 2"
+  },
+  "popup_emptyStep3": {
+    "message": "Add a memo and save",
+    "description": "Empty state step 3"
+  },
   "auth_disconnect": {
     "message": "Disconnect",
     "description": "Disconnect button text"
@@ -92,6 +104,22 @@
   "auth_connectTwitch": {
     "message": "Connect Twitch",
     "description": "Connect Twitch button"
+  },
+  "auth_step1": {
+    "message": "1. Click \"Open Link\" to open Twitch",
+    "description": "Auth step 1 instruction"
+  },
+  "auth_step2": {
+    "message": "2. Enter the code below",
+    "description": "Auth step 2 instruction"
+  },
+  "auth_step3": {
+    "message": "3. Click \"Authorize\" on Twitch",
+    "description": "Auth step 3 instruction"
+  },
+  "auth_success": {
+    "message": "Connected successfully!",
+    "description": "Auth success message"
   },
   "record_deleteConfirm": {
     "message": "Delete this record?",
@@ -227,16 +255,28 @@
     "message": "Visit a Twitch stream or VOD",
     "description": "Onboarding step 1"
   },
+  "onboarding_step1Detail": {
+    "message": "A \"Clip Later\" button will appear in the player controls",
+    "description": "Onboarding step 1 detail"
+  },
   "onboarding_step2": {
-    "message": "Click \"Clip Later\" or press Alt+Shift+C to record",
+    "message": "Click \"Clip Later\" or press Alt+Shift+C",
     "description": "Onboarding step 2"
   },
+  "onboarding_step2Detail": {
+    "message": "Add a memo to remember the moment",
+    "description": "Onboarding step 2 detail"
+  },
   "onboarding_step3": {
-    "message": "Open this popup later to create clips",
+    "message": "Open this popup to create clips",
     "description": "Onboarding step 3"
   },
+  "onboarding_step3Detail": {
+    "message": "Matched VODs are linked automatically",
+    "description": "Onboarding step 3 detail"
+  },
   "onboarding_connectBenefit": {
-    "message": "Connect your Twitch account to enable recording moments and automatic VOD linking.",
+    "message": "Connect your Twitch account to get started. This enables timestamp recording and automatic VOD linking.",
     "description": "Explanation of why Twitch connection is needed"
   },
   "onboarding_firstRecordHint": {

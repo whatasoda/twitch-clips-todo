@@ -27,12 +27,19 @@ export const MSG = {
   POPUP_EMPTY_DESCRIPTION: "popup_emptyDescription",
   POPUP_EMPTY_COMPLETED_TITLE: "popup_emptyCompletedTitle",
   POPUP_EMPTY_COMPLETED_DESCRIPTION: "popup_emptyCompletedDescription",
+  POPUP_EMPTY_STEP1: "popup_emptyStep1",
+  POPUP_EMPTY_STEP2: "popup_emptyStep2",
+  POPUP_EMPTY_STEP3: "popup_emptyStep3",
 
   // Auth
   AUTH_DISCONNECT: "auth_disconnect",
   AUTH_ENTER_CODE: "auth_enterCode",
   AUTH_OPEN_LINK: "auth_openLink",
   AUTH_CONNECT_TWITCH: "auth_connectTwitch",
+  AUTH_STEP1: "auth_step1",
+  AUTH_STEP2: "auth_step2",
+  AUTH_STEP3: "auth_step3",
+  AUTH_SUCCESS: "auth_success",
 
   // Record
   RECORD_DELETE_CONFIRM: "record_deleteConfirm",
@@ -75,8 +82,11 @@ export const MSG = {
   ONBOARDING_WELCOME_TITLE: "onboarding_welcomeTitle",
   ONBOARDING_WELCOME_DESCRIPTION: "onboarding_welcomeDescription",
   ONBOARDING_STEP1: "onboarding_step1",
+  ONBOARDING_STEP1_DETAIL: "onboarding_step1Detail",
   ONBOARDING_STEP2: "onboarding_step2",
+  ONBOARDING_STEP2_DETAIL: "onboarding_step2Detail",
   ONBOARDING_STEP3: "onboarding_step3",
+  ONBOARDING_STEP3_DETAIL: "onboarding_step3Detail",
   ONBOARDING_CONNECT_BENEFIT: "onboarding_connectBenefit",
   ONBOARDING_FIRST_RECORD_HINT: "onboarding_firstRecordHint",
   ONBOARDING_RETENTION_NOTICE: "onboarding_retentionNotice",

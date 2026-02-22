@@ -54,6 +54,7 @@ export function useAuth() {
   const [status, setStatus] = createSignal<AuthStatus>("idle");
   const [deviceAuth, setDeviceAuth] = createSignal<DeviceAuthState | null>(null);
   const [error, setError] = createSignal<Error | null>(null);
+  const [justAuthenticated, setJustAuthenticated] = createSignal(false);
 
   const [authCheck, { refetch }] = createResource(getAuthStatus);
 
@@ -119,6 +120,8 @@ export function useAuth() {
         if (authChange.newValue) {
           // Token was stored — auth completed
           setStatus("authenticated");
+          setJustAuthenticated(true);
+          setTimeout(() => setJustAuthenticated(false), 3000);
           setDeviceAuth(null);
           refetch();
         } else {
@@ -163,6 +166,8 @@ export function useAuth() {
 
       // Success - user authorized
       setStatus("authenticated");
+      setJustAuthenticated(true);
+      setTimeout(() => setJustAuthenticated(false), 3000);
       setDeviceAuth(null);
       await refetch();
     } catch (err) {
@@ -201,6 +206,7 @@ export function useAuth() {
     status,
     isAuthenticated,
     isLoading: () => authCheck.loading || status() === "pending",
+    justAuthenticated,
     deviceAuth,
     error,
     startAuth: handleStartAuth,

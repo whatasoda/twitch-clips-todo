@@ -52,7 +52,7 @@ export function createPageHandler(deps: PageHandlerDeps) {
         getOnboardingState()
           .then(async (state) => {
             if (!state.hasSeenTwitchToast) {
-              showToast(t(MSG.ONBOARDING_TWITCH_TOAST), "info");
+              showToast(t(MSG.ONBOARDING_TWITCH_TOAST), "info", 6000);
               await updateOnboardingState({ hasSeenTwitchToast: true });
             }
           })
