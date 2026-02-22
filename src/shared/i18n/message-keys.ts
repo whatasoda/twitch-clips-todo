@@ -36,6 +36,7 @@ export const MSG = {
   AUTH_STEP1: "auth_step1",
   AUTH_STEP2: "auth_step2",
   AUTH_STEP3: "auth_step3",
+  AUTH_SUCCESS: "auth_success",
 
   // Record
   RECORD_DELETE_CONFIRM: "record_deleteConfirm",

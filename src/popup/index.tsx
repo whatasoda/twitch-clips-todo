@@ -18,7 +18,7 @@ import { useOnboarding } from "./hooks/use-onboarding";
 export default function App() {
   const { records, error } = useRecords();
   const { pageInfo } = useCurrentTab();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, justAuthenticated } = useAuth();
   const { shouldShowFirstRecordHint, dismissFirstRecordHint } = useOnboarding();
   const { notification: cleanupNotification, dismissNotification: dismissCleanup } =
     useCleanupNotification();
@@ -65,6 +65,21 @@ export default function App() {
       </Show>
 
       <Show when={isAuthenticated()} fallback={<WelcomeCard />}>
+        <Show when={justAuthenticated()}>
+          <Box
+            mx="4"
+            mt="2"
+            p="3"
+            bg="green.3"
+            color="green.11"
+            borderRadius="md"
+            fontSize="sm"
+            fontWeight="semibold"
+            textAlign="center"
+          >
+            {t(MSG.AUTH_SUCCESS)}
+          </Box>
+        </Show>
         <Suspense
           fallback={
             <Center py="8">

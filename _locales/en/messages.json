@@ -105,6 +105,10 @@
     "message": "3. Click \"Authorize\" on Twitch",
     "description": "Auth step 3 instruction"
   },
+  "auth_success": {
+    "message": "Connected successfully!",
+    "description": "Auth success message"
+  },
   "record_deleteConfirm": {
     "message": "Delete this record?",
     "description": "Delete confirmation message"

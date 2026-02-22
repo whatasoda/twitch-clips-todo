@@ -105,6 +105,10 @@
     "message": "3. Twitchで「許可」をクリック",
     "description": "認証ステップ3の説明"
   },
+  "auth_success": {
+    "message": "接続しました！",
+    "description": "認証成功メッセージ"
+  },
   "record_deleteConfirm": {
     "message": "この記録を削除しますか？",
     "description": "削除確認メッセージ"
