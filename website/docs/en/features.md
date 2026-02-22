@@ -11,7 +11,7 @@
 
 ### Record Management
 
-- Side Panel interface
+- Popup interface
 - Records grouped by streamer
 - Edit and delete records
 - VOD linking status display
@@ -36,9 +36,9 @@ When you record a moment during a live stream:
 ### Floating Widget
 
 - Draggable position (persisted)
-- Auto-hide after 3 seconds
+- Auto-hide when idle
 - Shows pending record count
-- Click to open Side Panel
+- Click to open popup
 
 ### Data Management
 
@@ -48,7 +48,7 @@ When you record a moment during a live stream:
 
 ## Privacy & Security
 
-- No authentication required for basic features
-- Optional Twitch connection for enhanced features
+- Easy Twitch Device Code authentication
+- All data stays on your device
 - All data stays on your device
 - No analytics or tracking

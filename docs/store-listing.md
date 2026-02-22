@@ -59,10 +59,10 @@ twitch.tv のページにコンテンツスクリプトを挿入するために�
 ### Short Description (132 characters max)
 
 **English:**
-Bookmark moments during Twitch streams to create clips later. One-click recording, auto VOD linking, no login required.
+Bookmark moments during Twitch streams to create clips later. One-click recording, auto VOD linking, easy Twitch login.
 
 **日本語:**
-Twitch 配信中の気になる瞬間をブックマーク。ワンクリック記録、自動 VOD リンク、ログイン不要。
+Twitch 配信中の気になる瞬間をブックマーク。ワンクリック記録、自動 VOD リンク、簡単Twitchログイン。
 
 ### Detailed Description
 
@@ -75,7 +75,7 @@ Key Features:
 • One-click timestamp recording via keyboard shortcut or floating widget
 • Optional memos to describe each bookmarked moment
 • Automatic VOD linking — live stream bookmarks are linked to VODs after the stream ends
-• Records grouped by streamer in a convenient side panel
+• Records grouped by streamer in a convenient popup
 • One-click navigation to Twitch's clip creator at the exact timestamp
 • Track which clips you've already created
 • 60-day automatic cleanup keeps your data manageable
@@ -93,7 +93,7 @@ Twitch Clip Todo は、ライブ配信や VOD の視聴中にワンクリック�
 • キーボードショートカットまたはフローティングウィジェットによるワンクリックタイムスタンプ記録
 • ブックマークした瞬間を説明するオプションのメモ
 • 自動 VOD リンク — 配信終了後にライブ配信のブックマークを VOD にリンク
-• サイドパネルで配信者ごとにグループ化された記録
+• ポップアップで配信者ごとにグループ化された記録
 • 正確なタイムスタンプで Twitch クリップ作成ページへワンクリック遷移
 • 作成済みクリップのトラッキング
 • 60日間の自動クリーンアップでデータを管理しやすく

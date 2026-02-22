@@ -1,6 +1,6 @@
 # Privacy Policy
 
-_Last updated: January 2025_
+_Last updated: February 2026_
 
 ## Overview
 
@@ -104,7 +104,7 @@ To delete all Twitch Clip Todo data:
 
 This will remove all locally stored data including records, settings, and cached Twitch data.
 
-You can also clear extension data in Chrome settings, or delete individual records through the extension's side panel.
+You can also clear extension data in Chrome settings, or delete individual records through the extension's popup.
 
 ## Your Responsibilities
 
