@@ -33,6 +33,9 @@ export const MSG = {
   AUTH_ENTER_CODE: "auth_enterCode",
   AUTH_OPEN_LINK: "auth_openLink",
   AUTH_CONNECT_TWITCH: "auth_connectTwitch",
+  AUTH_STEP1: "auth_step1",
+  AUTH_STEP2: "auth_step2",
+  AUTH_STEP3: "auth_step3",
 
   // Record
   RECORD_DELETE_CONFIRM: "record_deleteConfirm",

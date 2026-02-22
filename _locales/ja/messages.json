@@ -93,6 +93,18 @@
     "message": "Twitchに接続",
     "description": "Twitch接続ボタン"
   },
+  "auth_step1": {
+    "message": "1. 「リンクを開く」をクリック",
+    "description": "認証ステップ1の説明"
+  },
+  "auth_step2": {
+    "message": "2. 以下のコードを入力",
+    "description": "認証ステップ2の説明"
+  },
+  "auth_step3": {
+    "message": "3. Twitchで「許可」をクリック",
+    "description": "認証ステップ3の説明"
+  },
   "record_deleteConfirm": {
     "message": "この記録を削除しますか？",
     "description": "削除確認メッセージ"

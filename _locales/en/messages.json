@@ -93,6 +93,18 @@
     "message": "Connect Twitch",
     "description": "Connect Twitch button"
   },
+  "auth_step1": {
+    "message": "1. Click \"Open Link\" to open Twitch",
+    "description": "Auth step 1 instruction"
+  },
+  "auth_step2": {
+    "message": "2. Enter the code below",
+    "description": "Auth step 2 instruction"
+  },
+  "auth_step3": {
+    "message": "3. Click \"Authorize\" on Twitch",
+    "description": "Auth step 3 instruction"
+  },
   "record_deleteConfirm": {
     "message": "Delete this record?",
     "description": "Delete confirmation message"
