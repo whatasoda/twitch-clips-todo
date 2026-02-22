@@ -10,15 +10,15 @@ import { FirstRecordHint } from "./components/FirstRecordHint";
 import { HelpPanel } from "./components/HelpPanel";
 import { TabSwitcher, type TabValue } from "./components/TabSwitcher";
 import { WelcomeCard } from "./components/WelcomeCard";
+import { useAuthContext } from "./contexts";
 import { useCurrentTab, useRecordActions, useRecords } from "./hooks";
-import { useAuth } from "./hooks/use-auth";
 import { useCleanupNotification } from "./hooks/use-cleanup-notification";
 import { useOnboarding } from "./hooks/use-onboarding";
 
 export default function App() {
   const { records, error } = useRecords();
   const { pageInfo } = useCurrentTab();
-  const { isAuthenticated, justAuthenticated } = useAuth();
+  const { isAuthenticated, justAuthenticated } = useAuthContext();
   const { shouldShowFirstRecordHint, dismissFirstRecordHint } = useOnboarding();
   const { notification: cleanupNotification, dismissNotification: dismissCleanup } =
     useCleanupNotification();

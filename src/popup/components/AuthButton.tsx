@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { t } from "@/shared/i18n";
 import { MSG } from "@/shared/i18n/message-keys";
 import { Box, Flex, styled } from "../../../styled-system/jsx";
-import { useAuth } from "../hooks/use-auth";
+import { useAuthContext } from "../contexts";
 
 const Code = styled("code", {
   base: {
@@ -18,7 +18,7 @@ const Code = styled("code", {
 
 export function AuthButton() {
   const { status, isAuthenticated, isLoading, deviceAuth, error, startAuth, cancelAuth, logout } =
-    useAuth();
+    useAuthContext();
 
   const openVerificationUrl = () => {
     const auth = deviceAuth();
