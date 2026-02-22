@@ -227,16 +227,28 @@
     "message": "Twitchの配信やVODページにアクセス",
     "description": "オンボーディングステップ1"
   },
+  "onboarding_step1Detail": {
+    "message": "プレイヤーに「後でクリップ」ボタンが表示されます",
+    "description": "オンボーディングステップ1の詳細"
+  },
   "onboarding_step2": {
     "message": "「後でクリップ」ボタンまたは Alt+Shift+C で記録",
     "description": "オンボーディングステップ2"
+  },
+  "onboarding_step2Detail": {
+    "message": "メモを追加して瞬間を覚えておきましょう",
+    "description": "オンボーディングステップ2の詳細"
   },
   "onboarding_step3": {
     "message": "後でこのポップアップからクリップを作成",
     "description": "オンボーディングステップ3"
   },
+  "onboarding_step3Detail": {
+    "message": "VODは自動的に紐づけられます",
+    "description": "オンボーディングステップ3の詳細"
+  },
   "onboarding_connectBenefit": {
-    "message": "Twitchアカウントを接続すると、瞬間の記録やVODの自動紐づけが可能になります。",
+    "message": "まずTwitchアカウントを接続してください。タイムスタンプの記録やVODの自動紐づけに必要です。",
     "description": "Twitch接続が必要な理由の説明"
   },
   "onboarding_firstRecordHint": {

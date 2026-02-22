@@ -4,7 +4,11 @@ import { MSG } from "@/shared/i18n/message-keys";
 import { Box, HStack, VStack } from "../../../styled-system/jsx";
 import { AuthButton } from "./AuthButton";
 
-const steps = [MSG.ONBOARDING_STEP1, MSG.ONBOARDING_STEP2, MSG.ONBOARDING_STEP3] as const;
+const steps = [
+  { main: MSG.ONBOARDING_STEP1, detail: MSG.ONBOARDING_STEP1_DETAIL },
+  { main: MSG.ONBOARDING_STEP2, detail: MSG.ONBOARDING_STEP2_DETAIL },
+  { main: MSG.ONBOARDING_STEP3, detail: MSG.ONBOARDING_STEP3_DETAIL },
+] as const;
 
 export function WelcomeCard() {
   return (
@@ -21,7 +25,7 @@ export function WelcomeCard() {
         </VStack>
 
         <VStack gap="2" alignItems="stretch">
-          {steps.map((stepKey, index) => (
+          {steps.map((step, index) => (
             <HStack gap="3" alignItems="flex-start">
               <Box
                 flexShrink={0}
@@ -39,7 +43,10 @@ export function WelcomeCard() {
                 {index + 1}
               </Box>
               <Box fontSize="sm" pt="0.5">
-                {t(stepKey)}
+                {t(step.main)}
+                <Box fontSize="xs" color="fg.muted" mt="0.5">
+                  {t(step.detail)}
+                </Box>
               </Box>
             </HStack>
           ))}
