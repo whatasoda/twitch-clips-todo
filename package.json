@@ -10,7 +10,9 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "format": "biome format --write .",
-    "test": "vitest"
+    "test": "vitest",
+    "bump": "bun run scripts/bump-version.ts",
+    "format:check": "biome format ."
   },
   "dependencies": {
     "@ark-ui/solid": "^5.30.0",
