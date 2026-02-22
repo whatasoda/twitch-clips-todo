@@ -25,7 +25,7 @@ After recording, a memo input appears:
 
 ### Step 3: View Your Records
 
-Click the extension icon to open the Side Panel:
+Click the extension icon to open the popup:
 
 - Records are grouped by streamer
 - Edit or delete records as needed
@@ -49,7 +49,7 @@ Live recordings need to link to VODs:
 When you have pending records for the current streamer:
 
 - **Drag** to reposition anywhere on the page
-- **Click** to open the Side Panel
+- **Click** to open the popup
 - **Badge** shows the number of pending records
 
 ## Keyboard Shortcuts

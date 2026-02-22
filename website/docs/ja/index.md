@@ -18,7 +18,7 @@ features:
   - title: 自動VODリンク
     details: ライブ配信中の記録は配信終了後に自動でVODにリンク
     icon: 🔗
-  - title: ログイン不要
-    details: Twitch認証なしで動作、データはローカルに保存
-    icon: 🔒
+  - title: 簡単ログイン
+    details: Twitchデバイスコード認証ですぐに開始
+    icon: 🔓
 ---

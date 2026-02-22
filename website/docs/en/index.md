@@ -18,7 +18,7 @@ features:
   - title: Automatic VOD Linking
     details: Live recordings automatically link to VODs after stream ends
     icon: 🔗
-  - title: No Login Required
-    details: Works without Twitch authentication - your data stays local
-    icon: 🔒
+  - title: Easy Login
+    details: Quick Twitch Device Code auth — start in seconds
+    icon: 🔓
 ---
