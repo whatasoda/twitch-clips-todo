@@ -77,6 +77,18 @@
     "message": "作成したクリップがここに表示されます。",
     "description": "完了済みタブの空状態説明"
   },
+  "popup_emptyStep1": {
+    "message": "Twitchの配信ページを開く",
+    "description": "空状態ステップ1"
+  },
+  "popup_emptyStep2": {
+    "message": "プレイヤーの「後でクリップ」をクリック、または Alt+Shift+C",
+    "description": "空状態ステップ2"
+  },
+  "popup_emptyStep3": {
+    "message": "メモを追加して保存",
+    "description": "空状態ステップ3"
+  },
   "auth_disconnect": {
     "message": "切断",
     "description": "切断ボタン"

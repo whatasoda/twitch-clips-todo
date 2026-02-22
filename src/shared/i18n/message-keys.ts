@@ -27,6 +27,9 @@ export const MSG = {
   POPUP_EMPTY_DESCRIPTION: "popup_emptyDescription",
   POPUP_EMPTY_COMPLETED_TITLE: "popup_emptyCompletedTitle",
   POPUP_EMPTY_COMPLETED_DESCRIPTION: "popup_emptyCompletedDescription",
+  POPUP_EMPTY_STEP1: "popup_emptyStep1",
+  POPUP_EMPTY_STEP2: "popup_emptyStep2",
+  POPUP_EMPTY_STEP3: "popup_emptyStep3",
 
   // Auth
   AUTH_DISCONNECT: "auth_disconnect",

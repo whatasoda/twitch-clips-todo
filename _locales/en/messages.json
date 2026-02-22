@@ -77,6 +77,18 @@
     "message": "Clips you create will appear here.",
     "description": "Empty state description for completed tab"
   },
+  "popup_emptyStep1": {
+    "message": "Open a Twitch stream page",
+    "description": "Empty state step 1"
+  },
+  "popup_emptyStep2": {
+    "message": "Click \"Clip Later\" in the player or press Alt+Shift+C",
+    "description": "Empty state step 2"
+  },
+  "popup_emptyStep3": {
+    "message": "Add a memo and save",
+    "description": "Empty state step 3"
+  },
   "auth_disconnect": {
     "message": "Disconnect",
     "description": "Disconnect button text"
