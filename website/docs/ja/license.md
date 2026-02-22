@@ -7,7 +7,7 @@ Twitch Clip Todo は MIT ライセンスのもとで公開されているオー�
 ```
 MIT License
 
-Copyright (c) 2025 Shota Hatada
+Copyright (c) 2026 Shota Hatada
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
